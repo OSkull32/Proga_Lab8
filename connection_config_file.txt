@@ -1,5 +1,0 @@
-username: s368087
-database host: localhost
-database port: 5432
-database name: studs
-database password: v7ZfrJ8HWJvkDFP5
