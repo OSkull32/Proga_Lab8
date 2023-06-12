@@ -1,0 +1,52 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        // https://mvnrepository.com/artifact/com.google.code.gson/gson
+        implementation 'com.google.code.gson:gson:2.10.1'
+        // JWT token
+        implementation 'com.auth0:java-jwt:3.14.0'
+    }
+}
+
+project(':server') {
+    apply plugin: 'application'
+    mainClassName = 'server.App'
+    dependencies {
+        implementation project(':common')
+        // https://mvnrepository.com/artifact/com.google.code.gson/gson
+        implementation 'com.google.code.gson:gson:2.10.1'
+        // https://mvnrepository.com/artifact/org.postgresql/postgresql
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
+
+    }
+    jar {
+        manifest {
+            attributes 'Main-Class': 'server.App'
+        }
+    }
+}
+
+project(':client') {
+    apply plugin: 'application'
+    mainClassName = 'client.App'
+    dependencies {
+        implementation project(':common')
+        implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.15'
+    }
+    run {
+        standardInput = System.in
+    }
+    jar {
+        manifest {
+            attributes 'Main-Class': 'client.App'
+        }
+    }
+}
