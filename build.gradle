@@ -42,6 +42,7 @@ project(':client') {
     dependencies {
         implementation project(':common')
         implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.15'
+        implementation group: 'org.controlsfx', name: 'controlsfx', version: '8.40.16'
         javafx {
             version = "20"
             modules = [ 'javafx.controls',  'javafx.fxml' ]

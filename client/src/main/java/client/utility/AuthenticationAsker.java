@@ -2,7 +2,6 @@ package client.utility;
 
 import client.App;
 import common.exceptions.WrongArgumentException;
-import common.utility.UserConsole;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;

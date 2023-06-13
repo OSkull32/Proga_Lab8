@@ -1,10 +1,14 @@
 package server.utility;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Класс для генерации ответов клиенту
  */
 public class ResponseOutputer {
     private static StringBuilder stringBuilder = new StringBuilder();
+    private static List<String> argList = new ArrayList<>();
 
     /**
      * Добавляет объект в конец строки
@@ -75,5 +79,12 @@ public class ResponseOutputer {
      */
     public static void clear() {
         stringBuilder.delete(0, stringBuilder.length());
+    }
+
+    public static String[] getArgsAndClear() {
+        String[] argsAsArray = new String[argList.size()];
+        argsAsArray = argList.toArray(argsAsArray);
+        argList.clear();
+        return argsAsArray;
     }
 }

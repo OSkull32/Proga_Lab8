@@ -49,7 +49,7 @@ public class App {
         CommandManager commandManager = new CommandManager(collectionManager,databaseUserManager, databaseCollectionManager);
 
         //RequestHandler requestHandler = new RequestHandler(commandManager, serverConsole);
-        HandleRequest handleRequest = new HandleRequest(commandManager, serverConsole);
+        HandleRequest handleRequest = new HandleRequest(commandManager, serverConsole, collectionManager);
 
         Server server = new Server(port, handleRequest, collectionManager);
 

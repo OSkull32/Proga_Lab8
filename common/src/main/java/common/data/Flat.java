@@ -88,6 +88,7 @@ public class Flat implements Comparable<Flat>, Serializable {
         this.creationDate = LocalDateTime.now();
     }
 
+
     public Flat(int id, String name, Coordinates coordinates, LocalDateTime creationDate, int area, long numberOfRooms, long numberOfBathrooms, Furnish furnish, View view, House house, User owner) {
         this.id = id;
         this.name = name;
@@ -191,6 +192,10 @@ public class Flat implements Comparable<Flat>, Serializable {
      */
     public int getId() {
         return id;
+    }
+
+    public Long getIdL() {
+        return (long) id;
     }
 
     public User getOwner() {
