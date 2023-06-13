@@ -111,4 +111,5 @@ public class UserConsole {
     public void printPreamble() {
         System.out.print("\uD83C\uDF7A>");
     }
+
 }

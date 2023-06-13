@@ -11,11 +11,14 @@ import server.commands.CommandManager;
 
 public class HandleRequest {
     private final CommandManager commandManager;
+    private CollectionManager collectionManager;
     private final ServerConsole serverConsole; //todo заменить на возврит стринга из метода
 
-    public HandleRequest(CommandManager commandManager, ServerConsole serverConsole) {
+    public HandleRequest(CommandManager commandManager, ServerConsole serverConsole, CollectionManager collectionManager) {
         this.commandManager = commandManager;
         this.serverConsole = serverConsole;
+        this.collectionManager = collectionManager;
+
     }
 
     public Client handle (Client client) {
@@ -42,7 +45,7 @@ public class HandleRequest {
             responseCode = ResponseCode.TOKEN_EXPIRED;
         }
 
-        client.setServerResponse(new Response(responseCode, answer, new User(null, null).setToken(user.getToken())));
+        client.setServerResponse(new Response(responseCode, ServerConsole.getAndClear(), new User(null, null).setToken(user.getToken()), ServerConsole.getArgsAndClear(), collectionManager.getCollection()));
         return client;
     }
 

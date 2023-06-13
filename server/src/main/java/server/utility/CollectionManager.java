@@ -3,7 +3,6 @@ package server.utility;
 import common.data.Flat;
 import common.data.View;
 import common.exceptions.DatabaseHandlingException;
-import common.utility.Console;
 import common.utility.UserConsole;
 import server.App;
 

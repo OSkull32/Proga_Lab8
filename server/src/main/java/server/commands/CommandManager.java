@@ -63,6 +63,7 @@ public class CommandManager {
         addCommand("show", new Show(collectionManager, databaseCollectionManager));
         addCommand("register", new Register(databaseUserManager));
         addCommand("login", new Login(databaseUserManager));
+        addCommand("refresh", new Refresh());
     }
 
     /*

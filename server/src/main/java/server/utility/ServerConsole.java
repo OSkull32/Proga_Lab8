@@ -2,12 +2,15 @@ package server.utility;
 
 import common.utility.Console;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ServerConsole implements Console {
 
-    private final StringBuilder builder = new StringBuilder();
+    private static final StringBuilder builder = new StringBuilder();
     private static final StringBuilder stringBuilder = new StringBuilder();
+    private static List<String> argList = new ArrayList<>();
 
     @Override
     public String readLine() {
@@ -44,7 +47,7 @@ public class ServerConsole implements Console {
 
     }
 
-    public String getAndClear() {
+    public static String getAndClear() {
         String toReturn = builder.toString();
         builder.delete(0, builder.length());
         return toReturn;
@@ -56,5 +59,12 @@ public class ServerConsole implements Console {
 
     public void clear() {
         builder.delete(0, builder.length());
+    }
+
+    public static String[] getArgsAndClear() {
+        String[] argsAsArray = new String[argList.size()];
+        argsAsArray = argList.toArray(argsAsArray);
+        argList.clear();
+        return argsAsArray;
     }
 }

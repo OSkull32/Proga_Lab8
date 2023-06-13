@@ -11,11 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
-
-import static java.sql.JDBCType.NULL;
 
 public class DatabaseCollectionManager {
     private final String SELECT_ALL_FLAT = "SELECT * FROM " + DatabaseHandler.FLAT_TABLE;
