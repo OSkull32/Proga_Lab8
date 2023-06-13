@@ -1,5 +1,6 @@
 package client;
 
+import client.controllers.LoginWindowController;
 import client.utility.AuthenticationHandler;
 import client.utility.UserHandler;
 import common.exceptions.InvalidValueException;
@@ -28,25 +29,56 @@ public class App extends Application {
     private static String host;
     private static int port;
 
+    private Stage stage;
+
+    private static Client client;
+
     public static void main(String[] args) {
-        launch();
+
         String[] as = new String[]{"localhost","1821"};
         if (!initializeConnectionAddress(as)) return;
+
         Scanner userScanner = new Scanner(System.in);
-        AuthenticationHandler authenticationHandler = new AuthenticationHandler(userScanner);
+        //AuthenticationHandler authenticationHandler = new AuthenticationHandler(userScanner);
         UserHandler userHandler = new UserHandler(userScanner);
-        Client client = new Client(host, port, RECONNECTION_TIMEOUT, MAX_RECONNECTION_ATTEMPTS, userHandler, authenticationHandler);
-        client.run();
-        userScanner.close();
+        client = new Client(host, port, RECONNECTION_TIMEOUT, MAX_RECONNECTION_ATTEMPTS, userHandler);
+        Thread t = new Thread(client::run);
+        t.start();
+
+        launch(); //запускает графический интерфейс
+
+        //userScanner.close();
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("LoginWindow.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
+    public void start(Stage stage) {
+        this.stage = stage;
         stage.setTitle("Hello!");
-        stage.setScene(scene);
+        try {
+            loadLoginWindow();
+        } catch (IOException e) {
+            //todo остановить работу приложения
+        }
+
         stage.show();
+    }
+
+    public void loadLoginWindow() throws IOException{
+        FXMLLoader loginWindowLoader = new FXMLLoader(App.class.getResource("LoginWindow.fxml"));
+        Scene scene = new Scene(loginWindowLoader.load());
+
+        //init fields
+        LoginWindowController loginWindowController = loginWindowLoader.getController();
+        loginWindowController.setClient(client);
+        loginWindowController.setApp(this);
+
+        stage.setScene(scene);
+    }
+
+    public void loadMainWindow() throws IOException {
+        FXMLLoader mainWindowLoader = new FXMLLoader(App.class.getResource("MainWindow.fxml"));
+        Scene scene = new Scene(mainWindowLoader.load());
+        stage.setScene(scene);
     }
 
     private static boolean initializeConnectionAddress(String[] hostAndPortArgs) {

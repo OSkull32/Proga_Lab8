@@ -31,14 +31,13 @@ public class Client {
     private AuthenticationHandler authenticationHandler;
     private User user;
 
-    public Client(String host, int port, int reconnectionTimeout, int maxReconnectionAttempts, UserHandler userHandler,
-                  AuthenticationHandler authenticationHandler) {
+    public Client(String host, int port, int reconnectionTimeout, int maxReconnectionAttempts, UserHandler userHandler) {
         this.host = host;
         this.port = port;
         this.reconnectionTimeout = reconnectionTimeout;
         this.maxReconnectionAttempts = maxReconnectionAttempts;
         this.userHandler = userHandler;
-        this.authenticationHandler = authenticationHandler;
+        //this.authenticationHandler = authenticationHandler;
     }
 
 
@@ -50,8 +49,8 @@ public class Client {
             while (true) {
                 try {
                     connectToServer();
-                    processAuthentication();
-                    processRequestToServer();
+                    //processAuthentication();
+                    //processRequestToServer();
                     break;
                 } catch (ConnectionErrorException ex) {
                     if (reconnectionAttempts >= maxReconnectionAttempts) {
@@ -71,13 +70,14 @@ public class Client {
                 }
                 reconnectionAttempts++;
             }
-            if (socketChannel != null) socketChannel.close();
-            UserConsole.printCommandTextNext("Работа клиента успешно завершена");
+            //if (socketChannel != null) socketChannel.close();
+            //UserConsole.printCommandTextNext("Работа клиента успешно завершена");
         } catch (InvalidValueException ex) {
             UserConsole.printCommandError("Клиент не может быть запущен");
-        } catch (IOException ex) {
-            UserConsole.printCommandError("Произошла ошибка при попытке завершить соединение с сервером");
         }
+//        catch (IOException ex) {
+//            UserConsole.printCommandError("Произошла ошибка при попытке завершить соединение с сервером");
+//        }
     }
 
     /**
@@ -165,5 +165,31 @@ public class Client {
             }
         } while (serverResponse == null || !serverResponse.getResponseCode().equals(ResponseCode.OK));
         user = serverResponse.getUser(); //юзер со свежим токеном
+    }
+
+    /**
+     * Осуществляет попытку логина
+     */
+    public boolean processLogin(String username, String pass) throws ConnectionErrorException{
+        final String LOGIN_COMMAND = "login";
+        Request requestToServer;
+        Response serverResponse;
+
+        requestToServer = new Request(LOGIN_COMMAND, "", new User(username, pass));
+        try {
+            serverWriter.writeObject(requestToServer);
+        } catch (IOException e) {
+            //todo сделать попытку переподключения к серверу (5 сек иначе исключение)
+            throw new ConnectionErrorException();
+        }
+        try {
+            serverResponse = (Response) serverReader.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new ConnectionErrorException();
+        }
+        if (serverResponse != null && serverResponse.getResponseCode().equals(ResponseCode.OK)) {
+            user = serverResponse.getUser(); //юзер со свежим токеном
+            return true;
+        } else return false;
     }
 }

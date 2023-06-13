@@ -13,5 +13,6 @@
         <TextField fx:id="tfPassword" layoutX="13.0" layoutY="85.0" prefHeight="25.0" prefWidth="402.0" />
         <Button layoutX="14.0" layoutY="129.0" mnemonicParsing="false" onAction="#bntLoginClicked" text="Log in" />
         <Button layoutX="117.0" layoutY="129.0" mnemonicParsing="false" onAction="#btnRegisterClicked" text="Register" />
+      <Label fx:id="warningsLabel" layoutX="14.0" layoutY="196.0" prefHeight="51.0" prefWidth="402.0" text="Label" />
     </children>
 </AnchorPane>
