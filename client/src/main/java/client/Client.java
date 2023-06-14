@@ -139,7 +139,7 @@ public class Client implements Runnable{
             isConnected = false;
             throw new InvalidValueException();
         } catch (IOException exception) {
-            exception.printStackTrace();
+            //exception.printStackTrace();
             UserConsole.printCommandError("ConnectionToServerException");
             isConnected = false;
             throw new ConnectionErrorException();

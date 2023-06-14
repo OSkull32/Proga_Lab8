@@ -24,3 +24,8 @@ hs_err_pid*
 replay_pid*
 
 connection_config_file.txt
+conninfo.txt
+/.idea/
+/build/
+/out/
+*.iml

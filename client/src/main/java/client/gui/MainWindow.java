@@ -5,16 +5,13 @@ import client.utility.OutputerUI;
 import client.App;
 import common.data.Flat;
 import common.data.Furnish;
-import common.data.House;
 import common.data.View;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
-import org.controlsfx.control.table.TableFilter;
 
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -27,7 +24,6 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.*;
 
 import java.io.File;
 import java.io.Serializable;
@@ -171,9 +167,7 @@ public class MainWindow {
         shapeMap = new HashMap<>();
         textMap = new HashMap<>();
         randomGenerator = new Random(RANDOM_SEED);
-        localeMap = new HashMap<>();
-        localeMap.put("English", new Locale("en", "NZ"));
-        localeMap.put("Русский", new Locale("ru", "RU"));
+        localeMap = ResourceFactory.LOCALE_MAP;
         languageComboBox.setItems(FXCollections.observableArrayList(localeMap.keySet()));
     }
 

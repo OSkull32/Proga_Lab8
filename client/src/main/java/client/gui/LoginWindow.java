@@ -3,6 +3,8 @@ package client.gui;
 import client.App;
 import client.Client;
 
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -10,12 +12,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 
+import java.util.ResourceBundle;
+
 
 public class LoginWindow {
     private final Color CONNECTED_COLOR = Color.GREEN;
     private final Color NOT_CONNECTED_COLOR = Color.RED;
-    App app;
-    Client client;
+
+    private App app;
+    private Client client;
+    private ResourceFactory resourceFactory;
+
     @FXML
     private Label usernameLabel;
     @FXML
@@ -30,7 +37,12 @@ public class LoginWindow {
     private Label isConnectedLabel;
     @FXML
     private Button signInButton;
-    private ResourceFactory resourceFactory;
+    @FXML
+    private ComboBox<String> languageComboBox;
+
+    public void initialize() {
+        languageComboBox.setItems(FXCollections.observableArrayList(ResourceFactory.LOCALE_MAP.keySet()));
+    }
 
     @FXML
     private void signInButtonOnAction() {
@@ -58,6 +70,14 @@ public class LoginWindow {
             isConnectedLabel.textProperty().bind(resourceFactory.getStringBinding("NotConnected"));
             isConnectedLabel.setTextFill(NOT_CONNECTED_COLOR);
         }
+
+    }
+
+    @FXML
+    void updateLanguages(ActionEvent event) {
+        resourceFactory.setResources(ResourceBundle.getBundle
+                (App.BUNDLE, ResourceFactory.LOCALE_MAP.get(languageComboBox.getValue())));
+        bindGuiLanguage();
     }
 
     public void setApp(App app) {
