@@ -3,6 +3,7 @@ package server.commands;
 import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import common.utility.Console;
+import server.utility.ResourceFactory;
 
 /**
  * Класс команды, которая завершает работу программы
@@ -25,7 +26,7 @@ public class Exit implements Command {
      * @see Command
      */
     @Override
-    public String getDescription() {
-        return "Команда завершает программу";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "ExitDescription").get();
     }
 }

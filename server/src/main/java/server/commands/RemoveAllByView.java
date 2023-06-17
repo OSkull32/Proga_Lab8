@@ -7,6 +7,7 @@ import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import server.utility.CollectionManager;
 import server.utility.DatabaseCollectionManager;
+import server.utility.ResourceFactory;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ public class RemoveAllByView implements Command {
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (args.isEmpty()) throw new WrongArgumentException();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
         int size = 0;
         try {
             View view = args.equals("null") ? null : View.valueOf(args);
@@ -56,18 +58,18 @@ public class RemoveAllByView implements Command {
                     size += 1;
                 }
             }
-            if (size == 0) builder.append("В коллекции нет элементов принадлежащих вам с заданным значением\n");
-            else builder.append("Было очищено ").append(count).append(" элементов\n");
+            if (size == 0) builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewNoElements").get()).append("\n");
+            else builder.append(count).append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewElementsDeleted").get()).append("\n");
         } catch (IllegalArgumentException ex) {
-            builder.append("Ошибка: Выбранной константы нет в перечислении.\n");
-            builder.append("Список всех констант:\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewNoSuchConstant").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewAllConstants").get()).append("\n");
             for (View view : View.values()) {
                 builder.append(view.toString()).append("\n");
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
-            builder.append("Ошибка: Не указаны аргументы команды.\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewWrongArguments").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append("Произошла ошибка при обращении к БД.\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewErrorDatabase").get()).append("\n");
         }
         return builder.toString();
     }
@@ -77,7 +79,7 @@ public class RemoveAllByView implements Command {
      * @see Command
      */
     @Override
-    public String getDescription() {
-        return "удаляет элементы коллекции, поля View которого соответствуют введенному";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "RemoveAllByViewDescription").get();
     }
 }

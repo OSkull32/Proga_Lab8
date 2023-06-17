@@ -4,6 +4,7 @@ import common.data.House;
 import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import server.utility.CollectionManager;
+import server.utility.ResourceFactory;
 import server.utility.SortByCoordinates;
 
 /**
@@ -36,6 +37,7 @@ public class FilterLessThanHouse implements Command {
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (!args.isEmpty()) throw new WrongArgumentException();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
         try {
             int year;
             Long numberOfFloors;
@@ -43,7 +45,8 @@ public class FilterLessThanHouse implements Command {
             Long numberOfLifts;
 
             if (objectArgument == null) {
-                return "Передан дом == NULL\n";
+                builder.append(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseWrongHouse").get()).append(" == NULL\n");
+                return builder.toString();
             }
             if (objectArgument instanceof House house) { //pattern variable
                 year = house.getYear();
@@ -51,8 +54,9 @@ public class FilterLessThanHouse implements Command {
                 numberOfFlatsOnFloor = house.getNumberOfFlatsOnFloor();
                 numberOfLifts = house.getNumberOfLifts();
             } else {
-                throw new WrongArgumentException("Объект аргумента не соответствует типу House");
+                throw new WrongArgumentException(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseTypeError").get());
             }
+            var wordFlat = ResourceFactory.getStringBinding(lang, "FilterLessThanHouseFlat").get() + ": ";
             collectionManager.getCollection().values().stream()
                     .filter(flat -> flat.getHouse() != null
                             && flat.getHouse().getYear() < year
@@ -61,12 +65,12 @@ public class FilterLessThanHouse implements Command {
                             && flat.getHouse().getNumberOfLifts() != null && numberOfLifts != null && flat.getHouse().getNumberOfLifts() < numberOfLifts
                     )
                     .sorted(new SortByCoordinates())
-                    .forEach(flat -> builder.append("Квартира: ").append(flat.getName()).append(";\n"));
+                    .forEach(flat -> builder.append(wordFlat).append(flat.getName()).append(";\n"));
 
         } catch (NumberFormatException e) {
-            throw new WrongArgumentException("Аргумент должен быть числом.");
+            throw new WrongArgumentException(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseWrongArgument").get());
         } catch (ArrayIndexOutOfBoundsException ex) {
-            builder.append("Ошибка: Не указаны аргументы команды, необходимо ввести 4 аргумента через пробел\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseWrongArgument2").get());
         }
         return builder.toString();
     }
@@ -77,7 +81,7 @@ public class FilterLessThanHouse implements Command {
      * @return описание команды.
      */
     @Override
-    public String getDescription() {
-        return "Вывести элементы, значение поля house которых меньше заданного";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "FilterLessThanHouseDescription").get();
     }
 }

@@ -10,6 +10,7 @@ import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import server.utility.CollectionManager;
 import server.utility.DatabaseCollectionManager;
+import server.utility.ResourceFactory;
 
 import java.util.Arrays;
 
@@ -36,6 +37,7 @@ public class Update implements Command {
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (args.isEmpty()) throw new WrongArgumentException();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
 
         try {
             int id = Integer.parseInt(args);
@@ -58,24 +60,24 @@ public class Update implements Command {
                     if (newFlat.getView() != null) oldFlat.setView(newFlat.getView());
                     if (newFlat.getHouse() != null) oldFlat.setHouse(newFlat.getHouse());
 
-                    builder.append("Элемент обновлен").append("\n");
+                    builder.append(ResourceFactory.getStringBinding(lang, "UpdateDone").get()).append("\n");
                 } else {
-                    throw new WrongArgumentException("Переданный объект не соответствует типу Flat");
+                    throw new WrongArgumentException(ResourceFactory.getStringBinding(lang, "UpdateWrongType").get());
                 }
             } else {
-                builder.append("Элемента с данным id не существует в коллекции").append("\n");
+                builder.append(ResourceFactory.getStringBinding(lang, "UpdateNoSuchElement").get()).append("\n");
             }
         } catch (IndexOutOfBoundsException ex) {
-            builder.append("Не указаны все аргументы команды").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "UpdateWrongArgs").get()).append("\n");
         } catch (NumberFormatException ex) {
-            builder.append("Формат аргумента не соответствует").append(ex.getMessage()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "UpdateWrongArgFormat").get()).append(ex.getMessage()).append("\n");
         } catch (PermissionDeniedException ex) {
-            builder.append("Недостаточно прав для выполнения команды").append("\n");
-            builder.append("Объекты, принадлежащие другим пользователям нельзя изменять").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "UpdateNotEnoughRights").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "UpdateCantChangeNotYourObjects").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append("Произошла ошибка при обращении к БД").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "UpdateErrorDatabase").get()).append("\n");
         } catch (ManualDatabaseEditException ex) {
-            builder.append("Произошло изменение базы данных вручную, для избежания ошибок перезагрузите клиент").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "UpdateDatabaseChangedManually").get()).append("\n");
         }
         return builder.toString();
     }
@@ -93,7 +95,7 @@ public class Update implements Command {
      * @see Command
      */
     @Override
-    public String getDescription() {
-        return "изменяет указанное поле выбранного id элемента коллекции";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "UpdateDescription").get();
     }
 }
