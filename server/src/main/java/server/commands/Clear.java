@@ -9,6 +9,7 @@ import common.interaction.FlatValue;
 import common.interaction.User;
 import server.utility.CollectionManager;
 import server.utility.DatabaseCollectionManager;
+import server.utility.ResourceFactory;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -53,10 +54,10 @@ public class Clear implements Command {
                     size += 1;
                 }
             }
-            if (size == 0) builder.append("Вы не можете очистить коллекцию, так как в ней нет ваших элементов").append("\n");
-            else builder.append("Все принадлежащие вам элементы коллекции очищены").append("\n");
+            if (size == 0) builder.append(ResourceFactory.getStringBinding(user.getLanguage(), "ClearNoYoursElements").get()).append("\n");
+            else builder.append(ResourceFactory.getStringBinding(user.getLanguage(), "ClearDone").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append("Произошла ошибка при обращении к БД").append("\n");
+            builder.append(ResourceFactory.getStringBinding(user.getLanguage(), "ClearError").get()).append("\n");
         }
         return builder.toString();
     }

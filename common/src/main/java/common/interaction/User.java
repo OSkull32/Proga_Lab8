@@ -7,6 +7,7 @@ public class User implements Serializable {
     private final String username;
     private final String password;
     private String token;
+    private String language;
 
     public User(String username, String password) {
         this.username = username;
@@ -28,6 +29,15 @@ public class User implements Serializable {
     public User setToken(String token) {
         this.token = token;
         return this;
+    }
+
+    public User setLanguage(String language) {
+        this.language = language;
+        return this;
+    }
+
+    public String getLanguage() {
+        return language;
     }
 
     @Override

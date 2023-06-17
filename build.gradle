@@ -19,6 +19,7 @@ subprojects {
 
 project(':server') {
     apply plugin: 'application'
+    apply plugin: 'org.openjfx.javafxplugin'
     mainClassName = 'server.App'
     dependencies {
         implementation project(':common')
@@ -26,6 +27,11 @@ project(':server') {
         implementation 'com.google.code.gson:gson:2.10.1'
         // https://mvnrepository.com/artifact/org.postgresql/postgresql
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
+        implementation group: 'org.controlsfx', name: 'controlsfx', version: '8.40.16'
+        javafx {
+            version = "20"
+            modules = [ 'javafx.controls',  'javafx.fxml' ]
+        }
 
     }
     jar {

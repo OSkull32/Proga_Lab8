@@ -29,7 +29,7 @@ public class HandleRequest {
 
         //этот try выставляет responseCode и responseBody (answer)
         try {
-            user = adaptUser(user);
+            user = adaptUser(user, request.getLanguage());
             answer = executeCommand(request.getCommandName(), request.getCommandStringArgument(),
                     request.getCommandObjectArgument(), user);
             responseCode = ResponseCode.OK;
@@ -45,7 +45,7 @@ public class HandleRequest {
             responseCode = ResponseCode.TOKEN_EXPIRED;
         }
 
-        client.setServerResponse(new Response(responseCode, ResponseOutputer.getAndClear(), new User(null, null).setToken(user.getToken()), ResponseOutputer.getArgsAndClear(), collectionManager.getCollection()));
+        client.setServerResponse(new Response(responseCode, answer, new User(null, null).setToken(user.getToken()), ResponseOutputer.getArgsAndClear(), collectionManager.getCollection()));
         return client;
     }
 
@@ -63,15 +63,15 @@ public class HandleRequest {
     }
 
     //после этой штуки юзер будет таким, что наш старый сервер сможет с ним работать
-    private User adaptUser(User user) throws TokenException {
+    private User adaptUser(User user, String language) throws TokenException {
         if (user.getToken() != null) {
             if (JWTService.verifyToken(user.getToken())) {
-                return new User(JWTService.getUsername(user.getToken()), "");
+                return new User(JWTService.getUsername(user.getToken()), "").setLanguage(language);
             } else {
                 throw new TokenException();
             }
         } else if (user.getUsername() != null && user.getPassword() != null) {
-            return new User(user.getUsername(), PasswordHasher.hashPassword(user.getPassword())); //бывш. hashed user
+            return new User(user.getUsername(), PasswordHasher.hashPassword(user.getPassword())).setLanguage(language); //бывш. hashed user
         } else {
             throw new UserIsNotFoundException("слишком много null-ов");
         }

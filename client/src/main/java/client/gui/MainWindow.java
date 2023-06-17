@@ -207,6 +207,7 @@ public class MainWindow {
     }
 
     private void bindGuiLanguage() {
+        client.setLanguage(languageComboBox.getSelectionModel().getSelectedItem());
         resourceFactory.setResources(ResourceBundle.getBundle
                 (App.BUNDLE, localeMap.get(languageComboBox.getSelectionModel().getSelectedItem())));
 
