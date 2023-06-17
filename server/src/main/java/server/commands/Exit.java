@@ -8,16 +8,7 @@ import common.utility.Console;
  * Класс команды, которая завершает работу программы
  */
 public class Exit implements Command {
-    private final Console console;
 
-    /**
-     * Конструктор класса
-     *
-     * @param console консоль
-     */
-    public Exit(Console console) {
-        this.console = console;
-    }
 
     /**
      * Метод, исполняющий команду. Выводит сообщение о завершении работы программы

@@ -47,7 +47,7 @@ public class CommandManager {
     private void putAllCommands() {
         addCommand("clear", new Clear(collectionManager, databaseCollectionManager));
         addCommand("execute_script", new ExecuteScript());
-        //addCommand("exit", new Exit(console));
+        addCommand("exit", new Exit());
         addCommand("filter_less_than_house", new FilterLessThanHouse(collectionManager));
         addCommand("help", new Help(this));
         addCommand("history", new History(this));
