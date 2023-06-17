@@ -45,7 +45,7 @@ public class HandleRequest {
             responseCode = ResponseCode.TOKEN_EXPIRED;
         }
 
-        client.setServerResponse(new Response(responseCode, ServerConsole.getAndClear(), new User(null, null).setToken(user.getToken()), ServerConsole.getArgsAndClear(), collectionManager.getCollection()));
+        client.setServerResponse(new Response(responseCode, ResponseOutputer.getAndClear(), new User(null, null).setToken(user.getToken()), ResponseOutputer.getArgsAndClear(), collectionManager.getCollection()));
         return client;
     }
 

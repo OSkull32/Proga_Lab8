@@ -1,6 +1,7 @@
 package server.utility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class ResponseOutputer {
     /**
      * Добавляет переход на следующую строку
      */
-    public static void appendLn() {
+    public static void appendln() {
         stringBuilder.append("\n");
     }
 
@@ -31,8 +32,12 @@ public class ResponseOutputer {
      *
      * @param object объект
      */
-    public static void appendLn(String object) {
+    public static void appendln(String object) {
         stringBuilder.append(object).append("\n");
+    }
+
+    public static void appendargs(String... args) {
+        argList.addAll(Arrays.asList(args));
     }
 
     /**

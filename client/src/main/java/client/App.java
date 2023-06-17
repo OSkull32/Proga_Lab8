@@ -15,8 +15,6 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -27,9 +25,6 @@ public class App extends Application {
     public static final String PS1 = "$ ";
     public static final String PS2 = "> ";
     public static final String BUNDLE = "bundles.gui";
-
-    private static final int RECONNECTION_TIMEOUT = 5000;
-    private static final int MAX_RECONNECTION_ATTEMPTS = 5;
     private static final String APP_TITLE = "Collection Keeper";
 
     private static String host;
@@ -109,25 +104,6 @@ public class App extends Application {
     public void stop() {
         client.stop();
         userScanner.close();
-    }
-
-    private static boolean initializeConnectionAddress(String[] hostAndPortArgs) {
-        try {
-            if (hostAndPortArgs.length != 2) throw new WrongArgumentException();
-            host = hostAndPortArgs[0];
-            port = Integer.parseInt(hostAndPortArgs[1]);
-            if (port < 0) throw new InvalidValueException();
-            return true;
-        } catch (WrongArgumentException ex) {
-            String jarName = new File(App.class.getProtectionDomain().getCodeSource().getLocation()
-                    .getPath()).getName();
-            UserConsole.printCommandTextNext("Использование: 'java -jar' " + jarName + " <host> <port>'");
-        } catch (NumberFormatException ex) {
-            UserConsole.printCommandError("Порт должен быть представлен числом");
-        } catch (InvalidValueException ex) {
-            UserConsole.printCommandError("Порт не может быть отрицательным");
-        }
-        return false;
     }
 
     public void setMainWindow() {

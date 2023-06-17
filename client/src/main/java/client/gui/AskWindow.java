@@ -297,7 +297,9 @@ public class AskWindow {
         nameLabel.textProperty().bind(resourceFactory.getStringBinding("NameColumn"));
         coordinatesXLabel.textProperty().bind(resourceFactory.getStringBinding("CoordinatesXColumn"));
         coordinatesYLabel.textProperty().bind(resourceFactory.getStringBinding("CoordinatesYColumn"));
-        areaField.textProperty().bind(resourceFactory.getStringBinding("AreaColumn"));
+        areaLabel.textProperty().bind(resourceFactory.getStringBinding("AreaColumn"));
+        numberOfRoomsLabel.textProperty().bind(resourceFactory.getStringBinding("NumberOfRoomsColumn"));
+        numberOfBathroomsLabel.textProperty().bind(resourceFactory.getStringBinding("NumberOfBathroomsColumn"));
         furnishLabel.textProperty().bind(resourceFactory.getStringBinding("FurnishColumn"));
         viewLabel.textProperty().bind(resourceFactory.getStringBinding("ViewColumn"));
         houseNameLabel.textProperty().bind(resourceFactory.getStringBinding("HouseNameColumn"));
