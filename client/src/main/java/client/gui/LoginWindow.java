@@ -59,6 +59,7 @@ public class LoginWindow {
     }
 
     private void bindGuiLanguage() {
+        client.setLanguage(languageComboBox.getValue());
         usernameLabel.textProperty().bind(resourceFactory.getStringBinding("UsernameLabel"));
         passwordLabel.textProperty().bind(resourceFactory.getStringBinding("PasswordLabel"));
         registerCheckBox.textProperty().bind(resourceFactory.getStringBinding("RegisterCheckbox"));
@@ -90,6 +91,12 @@ public class LoginWindow {
 
     public void initLangs(ResourceFactory resourceFactory) {
         this.resourceFactory = resourceFactory;
+        for (String localeName : ResourceFactory.LOCALE_MAP.keySet()) {
+            if (ResourceFactory.LOCALE_MAP.get(localeName).equals(resourceFactory.getResources().getLocale()))
+                languageComboBox.getSelectionModel().select(localeName);
+        }
+        if (languageComboBox.getSelectionModel().getSelectedItem().isEmpty())
+            languageComboBox.getSelectionModel().selectFirst();
         bindGuiLanguage();
     }
 }
