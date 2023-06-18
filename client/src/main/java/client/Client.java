@@ -19,6 +19,8 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Класс запускающий клиент
@@ -32,10 +34,12 @@ public class Client implements Runnable{
     private User user;
     private boolean isConnected;
     private String currentLanguage;
+    private final List<String> historyList;
 
     public Client(String host, int port) {
         this.host = host;
         this.port = port;
+        historyList = new LinkedList<>();
     }
 
 
@@ -96,8 +100,10 @@ public class Client implements Runnable{
             requestToServer = new Request(commandName, commandStringArgument, commandObjectArgument, user, currentLanguage);
             serverWriter.writeObject(requestToServer);
             serverResponse = (Response) serverReader.readObject();
-            if (!serverResponse.getResponseBody().isEmpty())
+            if (!serverResponse.getResponseBody().isEmpty()) {
                 OutputerUI.tryError(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
+                addToHistory(commandName);
+            }
         } catch (InvalidClassException | NotSerializableException exception) {
             OutputerUI.error("DataSendingException");
         } catch (ClassNotFoundException exception) {
@@ -180,5 +186,15 @@ public class Client implements Runnable{
 
     public void setLanguage(String language) {
         this.currentLanguage = language;
+    }
+
+    public void addToHistory(String commandName) {
+        historyList.add(commandName);
+        if (historyList.size() > 13)
+            historyList.remove(0);
+    }
+
+    public List<String> getHistoryList() {
+        return historyList;
     }
 }
