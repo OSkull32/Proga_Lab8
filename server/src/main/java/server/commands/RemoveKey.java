@@ -8,6 +8,7 @@ import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import server.utility.CollectionManager;
 import server.utility.DatabaseCollectionManager;
+import server.utility.ResourceFactory;
 
 /**
  * Класс команды, которая удаляет элемент
@@ -33,6 +34,7 @@ public class RemoveKey implements Command {
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (args.isEmpty()) throw new WrongArgumentException();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
         try {
             int key = Integer.parseInt(args);
             if (collectionManager.containsKey(key)) {
@@ -41,19 +43,19 @@ public class RemoveKey implements Command {
                 if (!databaseCollectionManager.checkFlatUserId(flatToRemove.getId(), user)) throw new ManualDatabaseEditException();
                 databaseCollectionManager.deleteFlatById(key);
                 collectionManager.removeKey(Integer.parseInt(args));
-                builder.append("Элемент коллекции был удален.").append("\n");
-            } else builder.append("Данного элемента коллекции не существует").append("\n");
+                builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeySuccess").get()).append("\n");
+            } else builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyNoSuchItem").get()).append("\n");
         } catch (IndexOutOfBoundsException ex) {
-            builder.append("Не указаны аргументы команды").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgument").get()).append("\n");
         } catch (NumberFormatException ex) {
-            builder.append("Формат аргумента не соответствует целочисленному ").append(ex.getMessage()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgumentFormat").get()).append(ex.getMessage()).append("\n");
         } catch (PermissionDeniedException ex) {
-            builder.append("Недостаточно прав для выполнения команды").append("\n");
-            builder.append("Объекты, принадлежащие другим пользователям нельзя изменять").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyNotEnoughRights").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyCantChangeNotYourObjects").get()).append("\n");
         } catch (ManualDatabaseEditException ex) {
-            builder.append("Произошло изменение базы данных вручную, для избежания ошибок перезагрузите клиент").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyErrorDatabaseChanged").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append("Произошла ошибка при обращении к БД").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyErrorDatabase").get()).append("\n");
         }
         return builder.toString();
     }
@@ -63,7 +65,7 @@ public class RemoveKey implements Command {
      * @see Command
      */
     @Override
-    public String getDescription() {
-        return "удаляет элемент с указанным ключом";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "RemoveKeyDescription").get();
     }
 }

@@ -9,6 +9,7 @@ import common.interaction.FlatValue;
 import common.interaction.User;
 import server.utility.CollectionManager;
 import server.utility.DatabaseCollectionManager;
+import server.utility.ResourceFactory;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class Clear implements Command {
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (!args.isEmpty()) throw new WrongArgumentException();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
         int size = 0;
         try {
             ArrayList<Integer> keys = new ArrayList<>();
@@ -53,10 +55,10 @@ public class Clear implements Command {
                     size += 1;
                 }
             }
-            if (size == 0) builder.append("Вы не можете очистить коллекцию, так как в ней нет ваших элементов").append("\n");
-            else builder.append("Все принадлежащие вам элементы коллекции очищены").append("\n");
+            if (size == 0) builder.append(ResourceFactory.getStringBinding(lang, "ClearNoYoursElements").get()).append("\n");
+            else builder.append(ResourceFactory.getStringBinding(lang, "ClearDone").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append("Произошла ошибка при обращении к БД").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "ClearError").get()).append("\n");
         }
         return builder.toString();
     }
@@ -66,7 +68,7 @@ public class Clear implements Command {
      * @see Command
      */
     @Override
-    public String getDescription() {
-        return "Очищает все элементы коллекции";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "ClearDescription").get();
     }
 }

@@ -6,6 +6,7 @@ import common.utility.Console;
 import common.utility.FileManager;
 import server.utility.CollectionManager;
 import server.utility.JsonParser;
+import server.utility.ResourceFactory;
 
 /**
  * Класс, который сохраняет коллекцию в файл.
@@ -47,8 +48,8 @@ public class Save implements Command {
      * @see Command
      */
     @Override
-    public String getDescription() {
-        return "сохраняет коллекцию в указанный файл";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "SaveDescription").get();
     }
 
 }

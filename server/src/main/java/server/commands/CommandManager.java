@@ -142,13 +142,13 @@ public class CommandManager {
     /**
      * Печатает в консоль описание по всем командам.
      *
-     * @see Command#getDescription()
+     * @see Command#getDescription(User)
      */
-    public String getCommandsInfo() { //команда help
+    public String getCommandsInfo(User user) { //команда help
         Set<String> commandNames = commands.keySet();
         StringBuilder builder = new StringBuilder();
         for (String commandName : commandNames) {
-            builder.append(commandName).append(": ").append(commands.get(commandName).getDescription()).append("\n");
+            builder.append(commandName).append(": ").append(commands.get(commandName).getDescription(user)).append("\n");
         }
         return builder.toString();
     }

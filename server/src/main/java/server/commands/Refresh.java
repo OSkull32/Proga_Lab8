@@ -5,6 +5,7 @@ import common.exceptions.UserAlreadyExistsException;
 import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import common.utility.JWTService;
+import server.utility.ResourceFactory;
 
 
 public class Refresh implements Command{
@@ -15,7 +16,7 @@ public class Refresh implements Command{
     }
 
     @Override
-    public String getDescription() {
-        return "Обновляет состояние коллекции";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "RefreshDescription").get();
     }
 }

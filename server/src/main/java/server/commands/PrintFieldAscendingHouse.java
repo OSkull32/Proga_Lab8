@@ -3,6 +3,7 @@ package server.commands;
 import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import server.utility.CollectionManager;
+import server.utility.ResourceFactory;
 import server.utility.SortByHouse;
 
 /**
@@ -33,11 +34,14 @@ public class PrintFieldAscendingHouse implements Command {
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (!args.isEmpty()) throw new WrongArgumentException();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
+        var wordFlat = ResourceFactory.getStringBinding(lang, "PrintFieldAscendingHouseFlat").get();
+        var wordHouse = ResourceFactory.getStringBinding(lang, "PrintFieldAscendingHouseHouse").get();
         collectionManager.getCollection().values().stream()
                 .sorted(new SortByHouse())
                 .forEach(flat -> {
                     String houseName = flat.getHouse() == null ? "null" : flat.getHouse().getName();
-                    builder.append("Квартира: ").append(flat.getName()).append(" в доме ").append(houseName).append("\n");
+                    builder.append(wordFlat).append(": ").append(flat.getName()).append(" ").append(wordHouse).append(" ").append(houseName).append("\n");
                 });
         return builder.toString();
     }
@@ -48,7 +52,7 @@ public class PrintFieldAscendingHouse implements Command {
      * @return описание команды.
      */
     @Override
-    public String getDescription() {
-        return "выводит значения поля house всех элементов в порядке возрастания";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "PrintFieldAscendingHouseDescription").get();
     }
 }

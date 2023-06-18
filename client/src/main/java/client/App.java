@@ -113,6 +113,7 @@ public class App extends Application {
             Parent mainWindowRootNode = mainWindowLoader.load();
             Scene mainWindowScene = new Scene(mainWindowRootNode);
             MainWindow mainWindow = mainWindowLoader.getController();
+            mainWindow.setClient(client);
             mainWindow.initLangs(resourceFactory);
 
             FXMLLoader askWindowLoader = new FXMLLoader();
@@ -129,7 +130,6 @@ public class App extends Application {
             askWindow.setAskStage(askStage);
             askWindow.initLangs(resourceFactory);
 
-            mainWindow.setClient(client);
             mainWindow.setUsername(client.getUsername());
             mainWindow.setAskStage(askStage);
             mainWindow.setPrimaryStage(primaryStage);

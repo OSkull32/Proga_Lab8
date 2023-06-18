@@ -6,6 +6,7 @@ import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import server.utility.CollectionManager;
 import server.utility.DatabaseCollectionManager;
+import server.utility.ResourceFactory;
 
 /**
  * Класс команды, которая добавляет элемент в коллекцию с заданным ключом
@@ -32,22 +33,23 @@ public class Insert implements Command {
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (!args.isEmpty()) throw new WrongArgumentException();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
         try {
 
 
             if (objectArgument instanceof Flat flat) {
                 //flat.setId(0); //устанавливается id
                 Flat aFlat = databaseCollectionManager.insertFlat(flat,user);
-                builder.append(collectionManager.insert(aFlat.getId(), aFlat)).append("\n");
+                builder.append(collectionManager.insert(aFlat.getId(), aFlat, user)).append("\n");
             } else {
-                throw new WrongArgumentException("Переданный объект не соответствует типу Flat");
+                throw new WrongArgumentException(ResourceFactory.getStringBinding(lang, "InsertWrongType").get());
             }
 
         } catch (IndexOutOfBoundsException ex) {
-            builder.append("Ошибка: Не указаны аргументы команды.\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "InsertWrongArguments").get());
         } catch (NumberFormatException ignored) {
         } catch (DatabaseHandlingException ex) {
-            builder.append("Произошла ошибка при обращении к базе данных!\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "InsertErrorDatabase").get());
         }
         return builder.toString();
     }
@@ -57,7 +59,7 @@ public class Insert implements Command {
      * @see Command
      */
     @Override
-    public String getDescription() {
-        return "добавляет элемент с указанным ключом в качестве атрибута";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "InsertDescription").get();
     }
 }

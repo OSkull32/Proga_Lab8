@@ -31,6 +31,7 @@ public class Client implements Runnable{
     private ObjectInputStream serverReader;
     private User user;
     private boolean isConnected;
+    private String currentLanguage;
 
     public Client(String host, int port) {
         this.host = host;
@@ -92,7 +93,7 @@ public class Client implements Runnable{
         Request requestToServer = null;
         Response serverResponse = null;
         try {
-            requestToServer = new Request(commandName, commandStringArgument, commandObjectArgument, user);
+            requestToServer = new Request(commandName, commandStringArgument, commandObjectArgument, user, currentLanguage);
             serverWriter.writeObject(requestToServer);
             serverResponse = (Response) serverReader.readObject();
             if (!serverResponse.getResponseBody().isEmpty())
@@ -175,5 +176,9 @@ public class Client implements Runnable{
             }
         } while (!requestToServer.getCommandName().equals("exit"));
         return true;
+    }
+
+    public void setLanguage(String language) {
+        this.currentLanguage = language;
     }
 }

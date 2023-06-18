@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
@@ -207,6 +208,7 @@ public class MainWindow {
     }
 
     private void bindGuiLanguage() {
+        client.setLanguage(languageComboBox.getSelectionModel().getSelectedItem());
         resourceFactory.setResources(ResourceBundle.getBundle
                 (App.BUNDLE, localeMap.get(languageComboBox.getSelectionModel().getSelectedItem())));
 
@@ -469,12 +471,18 @@ public class MainWindow {
         }
         if (languageComboBox.getSelectionModel().getSelectedItem().isEmpty())
             languageComboBox.getSelectionModel().selectFirst();
-        languageComboBox.setOnAction((event) ->
-                resourceFactory.setResources(ResourceBundle.getBundle
-                        (App.BUNDLE, localeMap.get(languageComboBox.getValue()))));
+//        languageComboBox.setOnAction((event) ->
+//                resourceFactory.setResources(ResourceBundle.getBundle
+//                        (App.BUNDLE, localeMap.get(languageComboBox.getValue()))));
         bindGuiLanguage();
     }
 
+    @FXML
+    void updateLanguages(ActionEvent event) {
+        resourceFactory.setResources(ResourceBundle.getBundle
+                (App.BUNDLE, ResourceFactory.LOCALE_MAP.get(languageComboBox.getValue())));
+        bindGuiLanguage();
+    }
 
 
 }

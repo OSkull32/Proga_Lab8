@@ -21,7 +21,7 @@ public interface Command {
      *
      * @return Возвращает описание команды
      */
-    default String getDescription() {
+    default String getDescription(User user) {
         return "Описание работы команды";
     }
 }

@@ -3,6 +3,7 @@ package server.utility;
 import common.data.Flat;
 import common.data.View;
 import common.exceptions.DatabaseHandlingException;
+import common.interaction.User;
 import common.utility.UserConsole;
 import server.App;
 
@@ -79,14 +80,21 @@ public class CollectionManager {
     /**
      * Метод выводит информацию о коллекции
      */
-    public String info() {
+    public String info(User user) {
         var builder = new StringBuilder();
-        builder.append("Коллекция: ").append(hashtable.getClass().getSimpleName()).append("\n");
-        builder.append("Тип элементов коллекции: ").append(Flat.class.getSimpleName()).append("\n");
+        var lang = user.getLanguage();
+
+        var collection = ResourceFactory.getStringBinding(lang, "InfoCollection").get();
+        var type = ResourceFactory.getStringBinding(lang, "InfoType").get();
+        var initTime = ResourceFactory.getStringBinding(lang, "InfoInitializationTime").get();
+        var size = ResourceFactory.getStringBinding(lang, "InfoSize").get();
+
+        builder.append(collection).append(": ").append(hashtable.getClass().getSimpleName()).append("\n");
+        builder.append(type).append(": ").append(Flat.class.getSimpleName()).append("\n");
         String pattern = "yyyy-MM-dd HH:mm:ss.SSS";
         DateTimeFormatter europeanDateFormat = DateTimeFormatter.ofPattern(pattern);
-        builder.append("Время инициализации коллекции: ").append(collectionInitialization.format(europeanDateFormat)).append("\n");
-        builder.append("Количество элементов в коллекции: ").append(hashtable.size()).append("\n");
+        builder.append(initTime).append(": ").append(collectionInitialization.format(europeanDateFormat)).append("\n");
+        builder.append(size).append(": ").append(hashtable.size()).append("\n");
         return builder.toString();
     }
 
@@ -96,12 +104,12 @@ public class CollectionManager {
      * @param key  идентификатор элемента
      * @param flat элемент коллекции, который нужно добавить
      */
-    public String insert(Integer key, Flat flat) { //todo User
+    public String insert(Integer key, Flat flat, User user) {
         if (!hashtable.contains(key)) {
             hashtable.put(key, flat);
             allId.add(flat.getId());
-            return "Элемент добавлен";
-        } else return "Элемент с данным ключом уже существует";
+            return ResourceFactory.getStringBinding(user.getLanguage(), "InsertDone").get();
+        } else return ResourceFactory.getStringBinding(user.getLanguage(), "InsertError").get();
     }
 
     /**

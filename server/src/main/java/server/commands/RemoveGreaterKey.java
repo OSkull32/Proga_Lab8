@@ -6,6 +6,7 @@ import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import server.utility.CollectionManager;
 import server.utility.DatabaseCollectionManager;
+import server.utility.ResourceFactory;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class RemoveGreaterKey implements Command {
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (args.isEmpty()) throw new WrongArgumentException();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
         int size = 0;
         try {
             int key = Integer.parseInt(args);
@@ -49,14 +51,14 @@ public class RemoveGreaterKey implements Command {
                     size += 1;
                 }
             }
-            if (size == 0) builder.append("В коллекции нет элементов принадлежащих вам с значением больше заданного").append("\n");
-            else builder.append("Было очищено ").append(count).append(" элементов").append("\n");
+            if (size == 0) builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyNoGreaterElements").get()).append("\n");
+            else builder.append(count).append(" ").append(ResourceFactory.getStringBinding(lang, "RemoveKeyElementsDeleted").get()).append("\n");
         } catch (IndexOutOfBoundsException ex) {
-            builder.append("Ошибка: Не указан аргумент команды").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgument").get()).append("\n");
         } catch (NumberFormatException ex) {
-            builder.append("Ошибка: Формат аргумента не соответствует целочисленному ").append(ex.getMessage()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgumentFormat").get()).append(ex.getMessage()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append("Произошла ошибка при обращении к БД").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyErrorDatabase").get()).append("\n");
         }
         return builder.toString();
     }
@@ -66,7 +68,7 @@ public class RemoveGreaterKey implements Command {
      * @see Command
      */
     @Override
-    public String getDescription() {
-        return "удаляет все элементы коллекции, значение id которых больше указанного ключа";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "RemoveGreaterKeyDescription").get();
     }
 }

@@ -67,7 +67,7 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\server.jar;%APP_HOME%\lib\common.jar;%APP_HOME%\lib\gson-2.10.1.jar;%APP_HOME%\lib\java-jwt-3.14.0.jar;%APP_HOME%\lib\postgresql-42.6.0.jar;%APP_HOME%\lib\jackson-databind-2.11.0.jar;%APP_HOME%\lib\commons-codec-1.14.jar;%APP_HOME%\lib\checker-qual-3.31.0.jar;%APP_HOME%\lib\jackson-annotations-2.11.0.jar;%APP_HOME%\lib\jackson-core-2.11.0.jar
+set CLASSPATH=%APP_HOME%\lib\server.jar;%APP_HOME%\lib\common.jar;%APP_HOME%\lib\gson-2.10.1.jar;%APP_HOME%\lib\java-jwt-3.14.0.jar;%APP_HOME%\lib\postgresql-42.6.0.jar;%APP_HOME%\lib\controlsfx-8.40.16.jar;%APP_HOME%\lib\javafx-fxml-20-win.jar;%APP_HOME%\lib\javafx-controls-20-win.jar;%APP_HOME%\lib\javafx-controls-20.jar;%APP_HOME%\lib\javafx-graphics-20-win.jar;%APP_HOME%\lib\javafx-graphics-20.jar;%APP_HOME%\lib\javafx-base-20-win.jar;%APP_HOME%\lib\javafx-base-20.jar;%APP_HOME%\lib\jackson-databind-2.11.0.jar;%APP_HOME%\lib\commons-codec-1.14.jar;%APP_HOME%\lib\checker-qual-3.31.0.jar;%APP_HOME%\lib\jackson-annotations-2.11.0.jar;%APP_HOME%\lib\jackson-core-2.11.0.jar
 
 
 @rem Execute server

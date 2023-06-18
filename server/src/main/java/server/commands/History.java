@@ -2,6 +2,7 @@ package server.commands;
 
 import common.exceptions.WrongArgumentException;
 import common.interaction.User;
+import server.utility.ResourceFactory;
 
 /**
  * Класс команды "history".
@@ -37,7 +38,7 @@ public class History implements Command {
      * @return Возвращает описание команды
      */
     @Override
-    public String getDescription() {
-        return "Возвращает последние 13 использованных команд";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "HistoryDescription").get();
     }
 }

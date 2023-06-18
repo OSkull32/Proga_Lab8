@@ -6,6 +6,7 @@ import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import common.utility.JWTService;
 import server.utility.DatabaseUserManager;
+import server.utility.ResourceFactory;
 
 public class Register implements Command{
     private DatabaseUserManager databaseUserManager;
@@ -17,21 +18,22 @@ public class Register implements Command{
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (!args.isEmpty()) throw new WrongArgumentException();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
         try {
             if (databaseUserManager.insertUser(user)) {
-            builder.append("Пользователь ").append(user.getUsername()).append(" зарегистрирован").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RegisterDone").get()).append("\n");
             user.setToken(JWTService.generateToken(user.getUsername()));
         } else throw new UserAlreadyExistsException();
         } catch (ClassCastException ex) {
-            builder.append("Переданный объект неверен").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RegisterWrongObject").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append("Произошла ошибка при обращении к базе данных").append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "RegisterErrorDatabase").get()).append("\n");
         }
         return builder.toString();
     }
 
     @Override
-    public String getDescription() {
-        return "Регистрирует пользователя";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "RegisterDescription").get();
     }
 }

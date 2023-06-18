@@ -5,6 +5,7 @@ import common.exceptions.WrongArgumentException;
 import common.interaction.User;
 import server.utility.CollectionManager;
 import server.utility.DatabaseCollectionManager;
+import server.utility.ResourceFactory;
 
 import java.sql.SQLException;
 import java.util.Hashtable;
@@ -37,14 +38,18 @@ public class Show implements Command {
         if (!args.isEmpty()) throw new WrongArgumentException();
         Hashtable<Integer, Flat> hashtable = collectionManager.getCollection();
         var builder = new StringBuilder();
+        var lang = user.getLanguage();
         if (hashtable.size() == 0) {
-            builder.append("Коллекция пуста\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "ShowCollectionIsEmpty").get()).append("\n");
         } else {
             AtomicInteger number = new AtomicInteger(1);
+            var wordElement = ResourceFactory.getStringBinding(lang, "ShowElement").get();
+            var wordUser = ResourceFactory.getStringBinding(lang, "ShowUser").get();
             hashtable.forEach((key, flat) -> {
                 try {
-                    builder.append("\nЭлемент №").append(number.getAndIncrement()).append("\n")
-                            .append(flat.toString()).append("\n").append("User:").append(databaseCollectionManager.getUsernameByFlatId(flat.getId())).append("\n");
+                    builder.append("\n").append(wordElement).append(" №").append(number.getAndIncrement()).append("\n")
+                            .append(flat.toString()).append("\n").append(wordUser).append(": ")
+                            .append(databaseCollectionManager.getUsernameByFlatId(flat.getId())).append("\n");
                 } catch (SQLException e) {
                     builder.append("Произошла ошибка при обращении к БД").append("\n");
                 }
@@ -58,7 +63,7 @@ public class Show implements Command {
      * @see Command
      */
     @Override
-    public String getDescription() {
-        return "Показывает содержимое всех элементов коллекции";
+    public String getDescription(User user) {
+        return ResourceFactory.getStringBinding(user.getLanguage(), "ShowDescription").get();
     }
 }
