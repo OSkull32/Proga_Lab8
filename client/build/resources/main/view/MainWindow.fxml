@@ -110,6 +110,11 @@
                     <Tooltip fx:id="removeLowerKeyButtonTooltip" text="RemoveLowerKeyButtonTooltip" />
                 </tooltip>
             </Button>
+            <Button fx:id="removeAllByViewButton" mnemonicParsing="false" onAction="#removeAllByViewButtonOnAction" text="RemoveAllByViewButton">
+                <tooltip>
+                    <Tooltip fx:id="removeAllByViewTooltip" text="RemoveAllByViewTooltip" />
+                </tooltip>
+            </Button>
             <Button fx:id="historyButton" mnemonicParsing="false" onAction="#historyButtonOnAction" text="HistoryButton">
                 <tooltip>
                     <Tooltip fx:id="historyButtonTooltip" text="HistoryButtonTooltip" />

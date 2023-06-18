@@ -1,8 +1,6 @@
 package server.commands;
 
-import common.data.Flat;
-import common.data.Furnish;
-import common.data.View;
+import common.data.*;
 import common.exceptions.DatabaseHandlingException;
 import common.exceptions.ManualDatabaseEditException;
 import common.exceptions.PermissionDeniedException;
@@ -12,7 +10,9 @@ import server.utility.CollectionManager;
 import server.utility.DatabaseCollectionManager;
 import server.utility.ResourceFactory;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Hashtable;
 
 /**
  * Класс команды, которая обновляет значение элемента коллекции с выбранным id
@@ -51,14 +51,30 @@ public class Update implements Command {
 
                     databaseCollectionManager.updateFlatById(id, newFlat);
 
-                    if (newFlat.getName() != null) oldFlat.setName(newFlat.getName());
-                    if (newFlat.getCoordinates() != null) oldFlat.setCoordinates(newFlat.getCoordinates());
-                    if (newFlat.getArea() != -1) oldFlat.setArea(newFlat.getArea());
-                    if (newFlat.getNumberOfRooms() != -1) oldFlat.setNumberOfRooms(newFlat.getNumberOfRooms());
-                    if (newFlat.getNumberOfBathrooms() != -1) oldFlat.setNumberOfBathrooms(newFlat.getNumberOfBathrooms());
-                    if (newFlat.getFurnish() != null) oldFlat.setFurnish(newFlat.getFurnish());
-                    if (newFlat.getView() != null) oldFlat.setView(newFlat.getView());
-                    if (newFlat.getHouse() != null) oldFlat.setHouse(newFlat.getHouse());
+                    String name = newFlat.getName() == null ? oldFlat.getName() : newFlat.getName();
+                    Coordinates coordinates =  newFlat.getCoordinates() == null ? oldFlat.getCoordinates() : newFlat.getCoordinates();
+                    int area = newFlat.getArea() == -1 ? oldFlat.getArea() : newFlat.getArea();
+                    LocalDateTime creationDate = oldFlat.getCreationDate();
+                    long numberOfRooms = newFlat.getNumberOfRooms() == -1 ? oldFlat.getNumberOfRooms() : newFlat.getNumberOfRooms();
+                    long numberOfBathrooms = newFlat.getNumberOfBathrooms() == -1 ? oldFlat.getNumberOfBathrooms() : newFlat.getNumberOfBathrooms();
+                    Furnish furnish = newFlat.getFurnish() == null ? oldFlat.getFurnish() : newFlat.getFurnish();
+                    View view = newFlat.getView() == null ? oldFlat.getView() : newFlat.getView();
+                    House house = newFlat.getHouse() == null ? oldFlat.getHouse() : newFlat.getHouse();
+
+                    collectionManager.removeFromCollection(oldFlat);
+                    collectionManager.addToCollection(new Flat(
+                            id,
+                            name,
+                            coordinates,
+                            creationDate,
+                            area,
+                            numberOfRooms,
+                            numberOfBathrooms,
+                            furnish,
+                            view,
+                            house,
+                            user
+                    ));
 
                     builder.append(ResourceFactory.getStringBinding(lang, "UpdateDone").get()).append("\n");
                 } else {

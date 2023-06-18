@@ -108,6 +108,8 @@ public class MainWindow {
     @FXML
     private Button removeGreaterKeyButton;
     @FXML
+    private Button removeAllByViewButton;
+    @FXML
     private Button removeLowerKeyButton;
     @FXML
     private Button historyButton;
@@ -121,6 +123,8 @@ public class MainWindow {
     private Tooltip infoButtonTooltip;
     @FXML
     private Tooltip insertButtonTooltip;
+    @FXML
+    private Tooltip removeAllByViewTooltip;
     @FXML
     private Tooltip updateButtonTooltip;
     @FXML
@@ -242,6 +246,8 @@ public class MainWindow {
         historyButton.textProperty().bind(resourceFactory.getStringBinding("HistoryButton"));
         printFieldAscendingButton.textProperty().bind(resourceFactory.getStringBinding("PrintFieldAscendingButton"));
         refreshButton.textProperty().bind(resourceFactory.getStringBinding("RefreshButton"));
+        removeAllByViewButton.textProperty().bind(resourceFactory.getStringBinding("RemoveAllByViewButton"));
+
 
         infoButtonTooltip.textProperty().bind(resourceFactory.getStringBinding("InfoButtonTooltip"));
         insertButtonTooltip.textProperty().bind(resourceFactory.getStringBinding("InsertButtonTooltip"));
@@ -255,13 +261,15 @@ public class MainWindow {
         historyButtonTooltip.textProperty().bind(resourceFactory.getStringBinding("HistoryButtonTooltip"));
         printFieldAscendingButtonTooltip.textProperty().bind(resourceFactory.getStringBinding("PrintFieldAscendingButtonTooltip"));
         refreshButtonTooltip.textProperty().bind(resourceFactory.getStringBinding("RefreshButtonTooltip"));
+        removeAllByViewTooltip.textProperty().bind(resourceFactory.getStringBinding("RemoveAllByViewTooltip"));
+
     }
 
     private void requestAction(String commandName, String commandStringArgument, Serializable commandObjectArgument) {
         Hashtable<Integer, Flat> responsedFlat = client.processRequestToServer(commandName, commandStringArgument,
                 commandObjectArgument);
-        Set<Flat> flatValues = responsedFlat.values().stream().collect(Collectors.toSet());
         if (responsedFlat != null) {
+            Set<Flat> flatValues = new HashSet<>(responsedFlat.values());
             ObservableList<Flat> flatList = FXCollections.observableArrayList(flatValues);
             flatTable.setItems(flatList);
             flatTable.getSelectionModel().clearSelection();
@@ -310,7 +318,10 @@ public class MainWindow {
             askWindow.setFlat(flatTable.getSelectionModel().getSelectedItem());
             askStage.showAndWait();
             Flat flat = askWindow.getAndClear();
-            if (flat != null) requestAction(UPDATE_COMMAND_NAME, id + "", flat);
+            if (flat != null){
+                flat.setId(id);
+                requestAction(UPDATE_COMMAND_NAME, id + "", flat);
+            }
         } else OutputerUI.error("UpdateButtonSelectionException");
 
     }
@@ -351,9 +362,28 @@ public class MainWindow {
                     flatFromTable.getView(),
                     flatFromTable.getHouse()
             );
-            requestAction(REMOVE_GREATER_KEY_COMMAND_NAME, "", flat);
+            requestAction(REMOVE_GREATER_KEY_COMMAND_NAME, flatTable.getSelectionModel().getSelectedItem().getIdL().toString(), flat);
         } else OutputerUI.error("RemoveGreaterKeyButtonSelectionException");
     }
+
+    @FXML
+    private void removeAllByViewButtonOnAction() {
+        if (!flatTable.getSelectionModel().isEmpty()) {
+            Flat flatFromTable = flatTable.getSelectionModel().getSelectedItem();
+            Flat flat = new Flat(
+                    flatFromTable.getName(),
+                    flatFromTable.getCoordinates(),
+                    flatFromTable.getArea(),
+                    flatFromTable.getNumberOfRooms(),
+                    flatFromTable.getNumberOfBathrooms(),
+                    flatFromTable.getFurnish(),
+                    flatFromTable.getView(),
+                    flatFromTable.getHouse()
+            );
+            requestAction(REMOVE_ALL_BY_VIEW_COMMAND_NAME, flatTable.getSelectionModel().getSelectedItem().getView().toString(), flat);
+        } else OutputerUI.error("RemoveAllByViewButtonSelectionException");
+    }
+
 
     @FXML
     private void removeLowerKeyButtonOnAction() {
@@ -369,7 +399,7 @@ public class MainWindow {
                     flatFromTable.getView(),
                     flatFromTable.getHouse()
             );
-            requestAction(REMOVE_LOWER_KEY_COMMAND_NAME, "", flat);
+            requestAction(REMOVE_LOWER_KEY_COMMAND_NAME, flatTable.getSelectionModel().getSelectedItem().getIdL().toString(), flat);
         } else OutputerUI.error("RemoveLowerKeyButtonSelectionException");
     }
 

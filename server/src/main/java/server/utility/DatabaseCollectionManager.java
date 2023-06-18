@@ -65,7 +65,7 @@ public class DatabaseCollectionManager {
             DatabaseHandler.COORDINATES_TABLE_X_COLUMN + ", " +
             DatabaseHandler.COORDINATES_TABLE_Y_COLUMN + ") VALUES (?, ?, ?)";
     private final String UPDATE_COORDINATES_BY_FLAT_ID = "UPDATE " + DatabaseHandler.COORDINATES_TABLE + " SET " +
-            DatabaseHandler.COORDINATES_TABLE_X_COLUMN + " = ?" +
+            DatabaseHandler.COORDINATES_TABLE_X_COLUMN + " = ?, " +
             DatabaseHandler.COORDINATES_TABLE_Y_COLUMN + " = ?" + " WHERE " +
             DatabaseHandler.COORDINATES_TABLE_FLAT_ID_COLUMN + " = ?";
     private final String DELETE_COORDINATES_BY_FLAT_ID = "DELETE FROM " + DatabaseHandler.COORDINATES_TABLE +
@@ -82,10 +82,10 @@ public class DatabaseCollectionManager {
             DatabaseHandler.HOUSE_TABLE_NUMBER_OF_FLATS_ON_FLOOR_COLUMN + ", " +
             DatabaseHandler.HOUSE_TABLE_NUMBER_OF_LIFTS_COLUMN +") VALUES (?, ?, ?, ?, ?)";
     private final String UPDATE_HOUSE_BY_ID = "UPDATE " + DatabaseHandler.HOUSE_TABLE + " SET " +
-            DatabaseHandler.HOUSE_TABLE_NAME_COLUMN + " = ?" +
-            DatabaseHandler.HOUSE_TABLE_YEAR_COLUMN + " = ?" +
-            DatabaseHandler.HOUSE_TABLE_NUMBER_OF_FLOORS_COLUMN + " = ?" +
-            DatabaseHandler.HOUSE_TABLE_NUMBER_OF_FLATS_ON_FLOOR_COLUMN + " = ?" +
+            DatabaseHandler.HOUSE_TABLE_NAME_COLUMN + " = ?, " +
+            DatabaseHandler.HOUSE_TABLE_YEAR_COLUMN + " = ?, " +
+            DatabaseHandler.HOUSE_TABLE_NUMBER_OF_FLOORS_COLUMN + " = ?, " +
+            DatabaseHandler.HOUSE_TABLE_NUMBER_OF_FLATS_ON_FLOOR_COLUMN + " = ?, " +
             DatabaseHandler.HOUSE_TABLE_NUMBER_OF_LIFTS_COLUMN + " = ?" + " WHERE " +
             DatabaseHandler.HOUSE_TABLE_ID_COLUMN + " = ?";
     private final String DELETE_HOUSE_BY_ID = "DELETE FROM " + DatabaseHandler.HOUSE_TABLE +
@@ -392,6 +392,7 @@ public class DatabaseCollectionManager {
 
             databaseHandler.commit();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             App.logger.severe("Произошла ошибка при выполнении группы запросов на обновление объекта");
             databaseHandler.rollback();
             throw new DatabaseHandlingException();
