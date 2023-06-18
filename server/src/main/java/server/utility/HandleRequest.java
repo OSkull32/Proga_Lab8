@@ -1,5 +1,6 @@
 package server.utility;
 
+import common.data.Flat;
 import common.exceptions.*;
 import common.interaction.User;
 import common.interaction.requests.Request;
@@ -8,6 +9,8 @@ import common.interaction.responses.ResponseCode;
 import common.utility.JWTService;
 import server.App;
 import server.commands.CommandManager;
+
+import java.util.Hashtable;
 
 public class HandleRequest {
     private final CommandManager commandManager;
@@ -45,7 +48,7 @@ public class HandleRequest {
             responseCode = ResponseCode.TOKEN_EXPIRED;
         }
 
-        client.setServerResponse(new Response(responseCode, answer, new User(null, null).setToken(user.getToken()), ResponseOutputer.getArgsAndClear(), collectionManager.getCollection()));
+        client.setServerResponse(new Response(responseCode, answer, new User(null, null).setToken(user.getToken()), ResponseOutputer.getArgsAndClear(), (Hashtable<Integer, Flat>) collectionManager.getCollection().clone()));
         return client;
     }
 

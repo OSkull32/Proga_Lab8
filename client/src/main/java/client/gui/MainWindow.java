@@ -378,7 +378,8 @@ public class MainWindow {
      */
     @FXML
     private void historyButtonOnAction() {
-        requestAction(HISTORY_COMMAND_NAME);
+        OutputerUI.tryError(client.getHistoryList().toString());
+        client.addToHistory("history");
     }
 
     private void refreshCanvas() {
