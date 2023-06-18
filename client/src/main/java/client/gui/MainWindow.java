@@ -5,6 +5,7 @@ import client.utility.OutputerUI;
 import client.App;
 import common.data.Flat;
 import common.data.Furnish;
+import common.data.House;
 import common.data.View;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
@@ -29,6 +30,7 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,7 +62,7 @@ public class MainWindow {
     @FXML
     private TableColumn<Flat, String> ownerColumn;
     @FXML
-    private TableColumn<Flat, LocalDateTime> creationDateColumn;
+    private TableColumn<Flat, String> creationDateColumn;
     @FXML
     private TableColumn<Flat, String> nameColumn;
     @FXML
@@ -153,8 +155,10 @@ public class MainWindow {
     private Client client;
     private Stage askStage;
     private Stage primaryStage;
+    private Stage askHouseStage;
     private FileChooser fileChooser;
     private AskWindow askWindow;
+    private AskHouseWindow askHouseWindow;
     private Map<String, Color> userColorMap;
     private Map<Shape, Long> shapeMap;
     private Map<Long, Text> textMap;
@@ -182,7 +186,7 @@ public class MainWindow {
         ownerColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getOwner().getUsername()));
         creationDateColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
         nameColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getName()));
         areaColumn.setCellValueFactory(cellData ->
@@ -412,6 +416,19 @@ public class MainWindow {
         client.addToHistory("history");
     }
 
+    @FXML
+    private void filterLessThanHouseButtonOnAction() {
+        askHouseWindow.clearHouse();
+        askHouseStage.showAndWait();
+        House house = askHouseWindow.getAndClear();
+        if (house != null) requestAction(FILTER_LESS_THEN_HOUSE_COMMAND_NAME, "", house);
+    }
+
+    @FXML
+    private void printFieldAscendingButtonOnAction() {
+        requestAction(PRINT_FIELD_ASCENDING_HOUSE_COMMAND_NAME);
+    }
+
     private void refreshCanvas() {
         shapeMap.keySet().forEach(s -> canvasPane.getChildren().remove(s));
         shapeMap.clear();
@@ -486,12 +503,20 @@ public class MainWindow {
         this.askStage = askStage;
     }
 
+    public void setAskHouseStage(Stage askHouseStage) {
+        this.askHouseStage = askHouseStage;
+    }
+
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
 
     public void setAskWindow(AskWindow askWindow) {
         this.askWindow = askWindow;
+    }
+
+    public void setAskHouseWindow(AskHouseWindow askHouseWindow) {
+        this.askHouseWindow = askHouseWindow;
     }
 
     public void initLangs(ResourceFactory resourceFactory) {
