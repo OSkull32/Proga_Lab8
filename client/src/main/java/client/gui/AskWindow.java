@@ -315,6 +315,8 @@ public class AskWindow {
         coordinatesXField.setText(flat.getCoordinates().getX() + "");
         coordinatesYField.setText(flat.getCoordinates().getY() + "");
         areaField.setText(flat.getArea() + "");
+        numberOfRoomsField.setText(flat.getNumberOfRooms() + "");
+        numberOfBathroomsField.setText(flat.getNumberOfBathrooms() + "");
         houseNameField.setText(flat.getHouse().getName());
         houseYearField.setText(flat.getHouse().getYear() + "");
         houseNumberOfFloorsField.setText(flat.getHouse().getNumberOfFloors() + "");
@@ -329,6 +331,8 @@ public class AskWindow {
         coordinatesXField.clear();
         coordinatesYField.clear();
         areaField.clear();
+        numberOfRoomsField.clear();
+        numberOfBathroomsField.clear();
         houseNameField.clear();
         houseYearField.clear();
         houseNumberOfFloorsField.clear();

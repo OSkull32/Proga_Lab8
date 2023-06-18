@@ -216,4 +216,15 @@ public class CollectionManager {
         allId.add(id);
         return id;
     }
+
+    public void removeFromCollection(Flat flat) {
+        int key = flat.getId();
+        hashtable.remove(key);
+    }
+
+    public void addToCollection(Flat flat) {
+        int key = flat.getId();
+        hashtable.put(key, flat);
+    }
+
 }
