@@ -122,7 +122,7 @@ public class Client implements Runnable{
         String command;
         try {
             command = register ? MainWindow.REGISTER_COMMAND_NAME : MainWindow.LOGIN_COMMAND_NAME;
-            requestToServer = new Request(command, "", new User(username, password));
+            requestToServer = new Request(command, "", null, new User(username, password), currentLanguage);
             if (serverWriter == null) throw new IOException();
             serverWriter.writeObject(requestToServer);
             serverResponse = (Response) serverReader.readObject();
