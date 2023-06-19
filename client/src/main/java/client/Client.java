@@ -156,7 +156,7 @@ public class Client implements Runnable{
     public boolean processScriptToServer(File scriptFile) {
         Request requestToServer = null;
         Response serverResponse = null;
-        ScriptHandler scriptHandler = new ScriptHandler(scriptFile);
+        ScriptHandler scriptHandler = new ScriptHandler(scriptFile, currentLanguage);
         do {
             try {
                 requestToServer = serverResponse != null ? scriptHandler.handle(serverResponse.getResponseCode(), user) :
