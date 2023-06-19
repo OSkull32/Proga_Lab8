@@ -23,8 +23,8 @@
                 <AnchorPane prefHeight="180.0" prefWidth="200.0">
                     <TableView fx:id="flatTable" prefHeight="598.0" prefWidth="445.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <columns>
-                            <TableColumn fx:id="idColumn" prefWidth="153.0" text="IdColumn" />
-                            <TableColumn fx:id="ownerColumn" prefWidth="47.0" text="OwnerColumn" />
+                            <TableColumn fx:id="idColumn" prefWidth="55.333343505859375" text="IdColumn" />
+                            <TableColumn fx:id="ownerColumn" prefWidth="97.33331298828125" text="OwnerColumn" />
                             <TableColumn fx:id="creationDateColumn" prefWidth="125.0" text="CreationDateColumn" />
                             <TableColumn fx:id="nameColumn" prefWidth="100.0" text="NameColumn" />
                             <TableColumn fx:id="coordinatesXColumn" prefWidth="30.0" text="CoordinatesXColumn" />
@@ -69,12 +69,12 @@
                     <Tooltip fx:id="insertButtonTooltip" text="InsertButtonTooltip" />
                 </tooltip>
             </Button>
-            <Button fx:id="filterLessThanHouseButton" mnemonicParsing="false" onAction="#insertButtonOnAction" text="filterLessThanHouseButton">
+            <Button fx:id="filterLessThanHouseButton" mnemonicParsing="false" onAction="#filterLessThanHouseButtonOnAction" text="filterLessThanHouseButton">
                 <tooltip>
                     <Tooltip fx:id="filterLessThanHouseButtonTooltip" text="filterLessThanHouseButtonTooltip" />
                 </tooltip>
             </Button>
-            <Button fx:id="printFieldAscendingButton" mnemonicParsing="false" onAction="#insertButtonOnAction" text="printFieldAscendingButton">
+            <Button fx:id="printFieldAscendingButton" mnemonicParsing="false" onAction="#printFieldAscendingButtonOnAction" text="printFieldAscendingButton">
                 <tooltip>
                     <Tooltip fx:id="printFieldAscendingButtonTooltip" text="printFieldAscendingButtonTooltip" />
                 </tooltip>

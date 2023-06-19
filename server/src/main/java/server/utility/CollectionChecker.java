@@ -1,25 +1,21 @@
 package server.utility;
 
+
 import common.data.Coordinates;
 import common.data.Flat;
 import common.data.Furnish;
 import common.data.House;
 import common.exceptions.CollectionException;
-import common.utility.FlatReader;
-import server.App;
+
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
-
+/*
 public class CollectionChecker {
 
-    /**
-     * Основной метод проверки коллекции.
-     *
-     * @param collection коллекция на проверку.
-     */
+
     public void checkCollection(Hashtable<Integer, Flat> collection) throws CollectionException {
         if (collection == null) return;
         Set<Integer> keySet = Set.copyOf(collection.keySet());
@@ -147,3 +143,4 @@ public class CollectionChecker {
     }
 
 }
+*/

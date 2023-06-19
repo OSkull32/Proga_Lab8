@@ -29,10 +29,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MainWindow {
     public static final String LOGIN_COMMAND_NAME = "login";
@@ -53,7 +51,7 @@ public class MainWindow {
 
     private final long RANDOM_SEED = 1821L;
     private final Duration ANIMATION_DURATION = Duration.millis(800);
-    private final double MAX_SIZE = 250;
+    private final double MAX_SIZE = 150;
 
     @FXML
     private TableView<Flat> flatTable;
@@ -227,6 +225,8 @@ public class MainWindow {
         coordinatesXColumn.textProperty().bind(resourceFactory.getStringBinding("CoordinatesXColumn"));
         coordinatesYColumn.textProperty().bind(resourceFactory.getStringBinding("CoordinatesYColumn"));
         areaColumn.textProperty().bind(resourceFactory.getStringBinding("AreaColumn"));
+        numberOfRoomsColumn.textProperty().bind(resourceFactory.getStringBinding("NumberOfRoomsColumn"));
+        numberOfBathroomsColumn.textProperty().bind(resourceFactory.getStringBinding("NumberOfBathroomsColumn"));
         furnishColumn.textProperty().bind(resourceFactory.getStringBinding("FurnishColumn"));
         viewColumn.textProperty().bind(resourceFactory.getStringBinding("ViewColumn"));
         houseNameColumn.textProperty().bind(resourceFactory.getStringBinding("HouseNameColumn"));

@@ -117,7 +117,7 @@ public class AskWindow {
             name = nameField.getText();
             if (name.equals("")) throw new InvalidValueException();
         } catch (InvalidValueException exception) {
-            OutputerUI.error("InvalidValueException");
+            OutputerUI.error("NameEmptyException");
             throw new IllegalArgumentException();
         }
         return name;
@@ -151,7 +151,7 @@ public class AskWindow {
             OutputerUI.error("CoordinatesYFormatException");
             throw new IllegalArgumentException();
         } catch (InvalidValueException exception) {
-            OutputerUI.error("CoordinatesYLimitsException", new String[]{String.valueOf(-397)});
+            OutputerUI.error("CoordinatesYLimitsException", new String[]{String.valueOf(-396)});
             throw new IllegalArgumentException();
         }
         return y;
@@ -165,10 +165,10 @@ public class AskWindow {
             area = Integer.parseInt(strArea);
             if (area <= 0) throw new InvalidValueException();
         } catch (NumberFormatException exception) {
-            OutputerUI.error("areaFormatException");
+            OutputerUI.error("AreaFormatException");
             throw new IllegalArgumentException();
         } catch (InvalidValueException exception) {
-            OutputerUI.error("areaLimitsException");
+            OutputerUI.error("AreaLimitsException");
             throw new IllegalArgumentException();
         }
         return area;
@@ -182,10 +182,10 @@ public class AskWindow {
             numberOfRooms = Long.parseLong(strNumberOfRooms);
             if (numberOfRooms <= 0 || numberOfRooms > 14) throw new InvalidValueException();
         } catch (NumberFormatException exception) {
-            OutputerUI.error("numberOfRoomsFormatException");
+            OutputerUI.error("NumberOfRoomsFormatException");
             throw new IllegalArgumentException();
         } catch (InvalidValueException exception) {
-            OutputerUI.error("numberOfRoomsLimitsException");
+            OutputerUI.error("NumberOfRoomsLimitsException");
             throw new IllegalArgumentException();
         }
         return numberOfRooms;
@@ -199,10 +199,10 @@ public class AskWindow {
             numberOfBathrooms = Long.parseLong(strNumberOfBathrooms);
             if (numberOfBathrooms <= 0) throw new InvalidValueException();
         } catch (NumberFormatException exception) {
-            OutputerUI.error("numberOfBathroomsFormatException");
+            OutputerUI.error("NumberOfBathroomsFormatException");
             throw new IllegalArgumentException();
         } catch (InvalidValueException exception) {
-            OutputerUI.error("numberOfBathroomsLimitsException");
+            OutputerUI.error("NumberOfBathroomsLimitsException");
             throw new IllegalArgumentException();
         }
         return numberOfBathrooms;
