@@ -57,6 +57,7 @@ public class FilterLessThanHouse implements Command {
                 throw new WrongArgumentException(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseTypeError").get());
             }
             var wordFlat = ResourceFactory.getStringBinding(lang, "FilterLessThanHouseFlat").get() + ": ";
+            var wordHouse = ResourceFactory.getStringBinding(lang, "FilterLessThanHouseHouse").get() + ": ";
             collectionManager.getCollection().values().stream()
                     .filter(flat -> flat.getHouse() != null
                             && flat.getHouse().getYear() < year
@@ -65,13 +66,15 @@ public class FilterLessThanHouse implements Command {
                             && flat.getHouse().getNumberOfLifts() != null && numberOfLifts != null && flat.getHouse().getNumberOfLifts() < numberOfLifts
                     )
                     .sorted(new SortByCoordinates())
-                    .forEach(flat -> builder.append(wordFlat).append(flat.getName()).append(";\n"));
+                    .forEach(flat -> builder.append(wordFlat).append(flat.getName()).append(" ").append(wordHouse).append(flat.getHouse().getName()).append(";\n"));
 
         } catch (NumberFormatException e) {
             throw new WrongArgumentException(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseWrongArgument").get());
-        } catch (ArrayIndexOutOfBoundsException ex) {
+        } catch (Exception ex) { //на случай непредвиденного null pointer (хотя по идее не должно возникнуть)
             builder.append(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseWrongArgument2").get());
         }
+        if (builder.toString().equals(""))
+            builder.append(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseNoSuchHouse").get());
         return builder.toString();
     }
 

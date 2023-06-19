@@ -22,8 +22,10 @@ public class ScriptHandler {
     private Scanner userScanner;
     private Stack<File> scriptStack = new Stack<>();
     private Stack<Scanner> scannerStack = new Stack<>();
+    private final String language;
 
-    public ScriptHandler(File scriptFile) {
+    public ScriptHandler(File scriptFile, String language) {
+        this.language = language;
         try {
             userScanner = new Scanner(scriptFile);
             scannerStack.add(userScanner);
@@ -71,15 +73,15 @@ public class ScriptHandler {
                 switch (processingCode) {
                     case OBJECT -> {
                         Flat flatAddValue = generateFlatAdd();
-                        return new Request(userCommand[0], userCommand[1], flatAddValue, user);
+                        return new Request(userCommand[0], userCommand[1], flatAddValue, user, language);
                     }
                     case UPDATE_OBJECT -> {
                         Flat flatUpdateValue = generateFlatUpdate();
-                        return new Request(userCommand[0], userCommand[1], flatUpdateValue, user);
+                        return new Request(userCommand[0], userCommand[1], flatUpdateValue, user, language);
                     }
                     case UPDATE_OBJECT_HOUSE -> {
                         House houseFilterValue = generateHouseFilter();
-                        return new Request(userCommand[0], userCommand[1], houseFilterValue, user);
+                        return new Request(userCommand[0], userCommand[1], houseFilterValue, user, language);
                     }
                     case SCRIPT -> {
                         File scriptFile = new File(userCommand[1]);
@@ -108,7 +110,7 @@ public class ScriptHandler {
             scriptStack.clear();
             return null;
         }
-        return new Request(userCommand[0], userCommand[1], null, user);
+        return new Request(userCommand[0], userCommand[1], null, user, language);
     }
 
     /**

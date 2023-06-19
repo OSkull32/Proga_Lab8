@@ -41,7 +41,7 @@ public class PrintFieldAscendingHouse implements Command {
                 .sorted(new SortByHouse())
                 .forEach(flat -> {
                     String houseName = flat.getHouse() == null ? "null" : flat.getHouse().getName();
-                    builder.append(wordFlat).append(": ").append(flat.getName()).append(" ").append(wordHouse).append(" ").append(houseName).append("\n");
+                    builder.append(wordFlat).append(": ").append(flat.getName()).append(" ").append(wordHouse).append(" ").append(houseName).append(";\n");
                 });
         return builder.toString();
     }

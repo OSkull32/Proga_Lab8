@@ -1,9 +1,6 @@
 package client;
 
-import client.gui.AskWindow;
-import client.gui.LoginWindow;
-import client.gui.MainWindow;
-import client.gui.ResourceFactory;
+import client.gui.*;
 import client.utility.OutputerUI;
 import common.exceptions.InvalidValueException;
 import common.exceptions.WrongArgumentException;
@@ -130,10 +127,26 @@ public class App extends Application {
             askWindow.setAskStage(askStage);
             askWindow.initLangs(resourceFactory);
 
+            FXMLLoader askHouseWindowLoader = new FXMLLoader();
+            askHouseWindowLoader.setLocation(getClass().getResource("/view/AskHouseWindow.fxml"));
+            Parent askHouseWindowRootNode = askHouseWindowLoader.load();
+            Scene askHouseWindowScene = new Scene(askHouseWindowRootNode);
+            Stage askHouseStage = new Stage();
+            askHouseStage.setTitle(APP_TITLE);
+            askHouseStage.setScene(askHouseWindowScene);
+            askHouseStage.setResizable(false);
+            askHouseStage.initModality(Modality.WINDOW_MODAL);
+            askHouseStage.initOwner(primaryStage);
+            AskHouseWindow askHouseWindow = askHouseWindowLoader.getController();
+            askHouseWindow.setAskHouseStage(askHouseStage);
+            askHouseWindow.initLangs(resourceFactory);
+
             mainWindow.setUsername(client.getUsername());
             mainWindow.setAskStage(askStage);
+            mainWindow.setAskHouseStage(askHouseStage);
             mainWindow.setPrimaryStage(primaryStage);
             mainWindow.setAskWindow(askWindow);
+            mainWindow.setAskHouseWindow(askHouseWindow);
             mainWindow.refreshButtonOnAction();
 
             primaryStage.setScene(mainWindowScene);
