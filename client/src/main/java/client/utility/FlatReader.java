@@ -324,7 +324,7 @@ public class FlatReader implements FlatReaderInterface, CoordinatesReaderInterfa
      * @return объект типа House
      */
     @Override
-    public House readHouse() throws ErrorInScriptException{
+    public House readHouse() throws ErrorInScriptException {
         while (true) {
             if (!fileMode)
                 UserConsole.printCommandText("EnterHouse");
@@ -337,7 +337,7 @@ public class FlatReader implements FlatReaderInterface, CoordinatesReaderInterfa
                 else return new House(str, readHouseYear(), readHouseNumberOfFloors(),
                         readHouseNumberOfFlatsOnFloor(), readHouseNumberOfLifts());
             }
-        throw new ErrorInScriptException();
+        }
     }
 
     /**
@@ -367,6 +367,7 @@ public class FlatReader implements FlatReaderInterface, CoordinatesReaderInterfa
             OutputerUI.error("UnexpectedException");
             System.exit(0);
         }
+        throw new ErrorInScriptException();
     }
 
     /**
@@ -393,7 +394,6 @@ public class FlatReader implements FlatReaderInterface, CoordinatesReaderInterfa
                 OutputerUI.error("UnexpectedException");
                 System.exit(0);
             }
-        }
         throw new ErrorInScriptException();
     }
 
