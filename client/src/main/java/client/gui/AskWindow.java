@@ -98,23 +98,30 @@ public class AskWindow {
                                 convertNumberOfRooms(),
                                 convertNumberOfBathrooms(),
                     furnishBox.getValue(),
-                    viewBox.getValue(),
-                                new House(
-                                        convertHouseName(),
-                                        convertHouseYear(),
-                                        convertHouseNumberOfFloors(),
-                                        convertHouseNumberOfFlatsOnFloor(),
-                                        convertHouseNumberOfLifts()
-                                )
+                    viewBox.getValue().equals(View.NULL) ? null : viewBox.getValue(),
+                                convertHouse()
                         );
             askStage.close();
         } catch (IllegalArgumentException exception) { /* ? */ }
     }
 
+    private House convertHouse() {
+        var name = convertHouseName();
+        if (name == null)
+            return null;
+        return new House(
+                name,
+                convertHouseYear(),
+                convertHouseNumberOfFloors(),
+                convertHouseNumberOfFlatsOnFloor(),
+                convertHouseNumberOfLifts()
+        );
+    }
+
     private String convertName() throws IllegalArgumentException {
         String name;
         try {
-            name = nameField.getText();
+            name = nameField.getText().trim();
             if (name.equals("")) throw new InvalidValueException();
         } catch (InvalidValueException exception) {
             OutputerUI.error("InvalidValueException");
@@ -210,7 +217,7 @@ public class AskWindow {
 
     private String convertHouseName() {
         String houseName;
-            houseName = houseNameField.getText();
+            houseName = houseNameField.getText().trim();
             if (houseName.equals("")) houseName = null;
         return houseName;
     }
@@ -235,8 +242,7 @@ public class AskWindow {
         String strHouseNumberOfFloors;
         Long houseNumberOfFloors;
         try {
-            strHouseNumberOfFloors = houseNumberOfFloorsField.getText();
-            houseNumberOfFloors = Long.parseLong(strHouseNumberOfFloors);
+            strHouseNumberOfFloors = houseNumberOfFloorsField.getText().trim();
             if (strHouseNumberOfFloors.equals("")) houseNumberOfFloors = null;
             else {
                 houseNumberOfFloors = Long.parseLong(strHouseNumberOfFloors);
@@ -273,9 +279,8 @@ public class AskWindow {
         String strHouseNumberOfLifts;
         Long houseNumberOfLifts;
         try {
-            strHouseNumberOfLifts = houseNumberOfLiftsField.getText();
-            houseNumberOfLifts = Long.parseLong(strHouseNumberOfLifts);
-            if (strHouseNumberOfLifts.equals("")) houseNumberOfLiftsField = null;
+            strHouseNumberOfLifts = houseNumberOfLiftsField.getText().trim();
+            if (strHouseNumberOfLifts.equals("")) houseNumberOfLifts = null;
             else {
                 houseNumberOfLifts = Long.parseLong(strHouseNumberOfLifts);
                 if (houseNumberOfLifts <= 0) throw new InvalidValueException();
@@ -317,13 +322,25 @@ public class AskWindow {
         areaField.setText(flat.getArea() + "");
         numberOfRoomsField.setText(flat.getNumberOfRooms() + "");
         numberOfBathroomsField.setText(flat.getNumberOfBathrooms() + "");
-        houseNameField.setText(flat.getHouse().getName());
-        houseYearField.setText(flat.getHouse().getYear() + "");
-        houseNumberOfFloorsField.setText(flat.getHouse().getNumberOfFloors() + "");
-        houseNumberOfFlatsOnFloorField.setText(flat.getHouse().getNumberOfFlatsOnFloor() + "");
-        houseNumberOfLiftsField.setText(flat.getHouse().getNumberOfLifts() + "");
+        if (flat.getHouse() != null) {
+            houseNameField.setText(flat.getHouse().getName());
+            houseYearField.setText(flat.getHouse().getYear() + "");
+            if (flat.getHouse().getNumberOfFloors() != null)
+                houseNumberOfFloorsField.setText(flat.getHouse().getNumberOfFloors() + "");
+            else houseNumberOfFloorsField.clear();
+            houseNumberOfFlatsOnFloorField.setText(flat.getHouse().getNumberOfFlatsOnFloor() + "");
+            if (flat.getHouse().getNumberOfLifts() != null)
+                houseNumberOfLiftsField.setText(flat.getHouse().getNumberOfLifts() + "");
+            else houseNumberOfLiftsField.clear();
+        } else {
+            houseNameField.clear();
+            houseYearField.clear();
+            houseNumberOfFloorsField.clear();
+            houseNumberOfFlatsOnFloorField.clear();
+            houseNumberOfLiftsField.clear();
+        }
+        viewBox.setValue(flat.getView() == null ? View.NULL : flat.getView());
         furnishBox.setValue(flat.getFurnish());
-        viewBox.setValue(flat.getView());
     }
 
     public void clearFlat() {

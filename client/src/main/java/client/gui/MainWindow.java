@@ -204,15 +204,15 @@ public class MainWindow {
         viewColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getView()));
         houseNameColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getName()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getName()));
         houseYearColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getYear()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getYear()));
         houseNumberOfFloorsColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getNumberOfFloors()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getNumberOfFloors()));
         houseNumberOfFlatsOnFloorColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getNumberOfFlatsOnFloor()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getNumberOfFlatsOnFloor()));
         houseNumberOfLiftsColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getNumberOfLifts()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getNumberOfLifts()));
     }
 
     private void bindGuiLanguage() {
