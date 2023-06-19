@@ -259,6 +259,8 @@ public class FlatReader implements FlatReaderInterface, CoordinatesReaderInterfa
                     view = null;
                 } else {
                     view = View.valueOf(str.toUpperCase().trim());
+                    if (view.equals(View.NULL))
+                        view = null;
                 }
                 return view;
             } catch (IllegalArgumentException ex) {
