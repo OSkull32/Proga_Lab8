@@ -1,11 +1,7 @@
 package client.gui;
 
 import client.utility.OutputerUI;
-import common.data.Flat;
-import common.data.Furnish;
 import common.data.House;
-import common.data.View;
-import common.exceptions.InvalidValueException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
