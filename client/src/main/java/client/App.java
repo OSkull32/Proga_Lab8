@@ -85,7 +85,6 @@ public class App extends Application {
         } catch (Exception exception) {
             // TODO: Обработать ошибки
             System.out.println(exception);
-            exception.printStackTrace();
         }
     }
 
@@ -156,7 +155,6 @@ public class App extends Application {
         } catch (Exception exception) {
             // TODO: Обработать ошибки
             System.out.println(exception);
-            exception.printStackTrace();
         }
     }
 }

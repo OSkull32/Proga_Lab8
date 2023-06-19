@@ -1,6 +1,5 @@
 package client.utility;
 
-import client.App;
 import common.data.*;
 import common.exceptions.CommandUsageException;
 import common.exceptions.ErrorInScriptException;
@@ -8,7 +7,6 @@ import common.exceptions.RecursiveException;
 import common.interaction.User;
 import common.interaction.requests.Request;
 import common.interaction.responses.ResponseCode;
-import common.utility.FlatReader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,10 +48,12 @@ public class ScriptHandler {
                         else return null;
                     }
                     userInput = userScanner.nextLine();
+                    /*
                     if (!userInput.isEmpty()) {
                         UserConsole.printCommandTextNext(App.PS1);
                         UserConsole.printCommandTextNext(userInput);
                     }
+                     */
                     userCommand = (userInput.trim() + " ").split(" ", 2);
                     userCommand[1] = userCommand[1].trim();
                 } catch (NoSuchElementException | IllegalStateException exception) {
@@ -91,7 +91,7 @@ public class ScriptHandler {
                         scannerStack.push(userScanner);
                         scriptStack.push(scriptFile);
                         userScanner = new Scanner(scriptFile);
-                        UserConsole.printCommandTextNext("Выполняю скрипт '" + scriptFile.getName() + "'...");
+                        UserConsole.printCommandTextNext("ScriptRunning", scriptFile.getName());
                     }
                 }
             } catch (FileNotFoundException exception) {
@@ -156,16 +156,16 @@ public class ScriptHandler {
                     if (!commandArgument.isEmpty()) throw new CommandUsageException("<History>");
                 }
                 default -> {
-                    UserConsole.printCommandTextNext("Команда '" + command + "' не найдена. Наберите 'help' для справки.");
+                    UserConsole.printCommandTextNext("CommandNotFoundException", command);
                     return ProcessingCode.ERROR;
                 }
             }
         } catch (CommandUsageException exception) {
             if (exception.getMessage() != null) command += " " + exception.getMessage();
-            UserConsole.printCommandTextNext("Использование: '" + command + "'");
+            UserConsole.printCommandTextNext("Using", command);
             return ProcessingCode.ERROR;
         } catch (NumberFormatException ex) {
-            UserConsole.printCommandError("Формат аргумента не соответствует целочисленному");
+            UserConsole.printCommandError("NumberFormatException");
         }
         return ProcessingCode.OK;
     }
@@ -188,21 +188,21 @@ public class ScriptHandler {
     private Flat generateFlatUpdate() throws ErrorInScriptException {
         FlatReader flatReader = new FlatReader(userScanner);
         if (fileMode()) flatReader.setFileMode();
-        String name = flatReader.askQuestion("Хотите поменять имя квартиры?") ?
+        String name = flatReader.askQuestion("ChangeNameQuestion") ?
                 flatReader.readName() : null;
-        Coordinates coordinates = flatReader.askQuestion("Хотите изменить координаты квартиры?") ?
+        Coordinates coordinates = flatReader.askQuestion("ChangeCoordinatesQuestion") ?
                 flatReader.readCoordinates() : null;
-        int area = (flatReader.askQuestion("Хотите изменить площадь квартиры?") ?
+        int area = (flatReader.askQuestion("ChangeAreaQuestion") ?
                 flatReader.readArea() : -1);
-        long numberOfRooms = (flatReader.askQuestion("Хотите изменить количество комнат?") ?
+        long numberOfRooms = (flatReader.askQuestion("ChangeNumberOfRoomsQuestion") ?
                 flatReader.readNumberOfRooms() : -1);
-        long numberOfBathrooms = (flatReader.askQuestion("Хотите изменить количество ванных комнат?") ?
+        long numberOfBathrooms = (flatReader.askQuestion("ChangeNumberOfBathroomsQuestion") ?
                 flatReader.readNumberOfBathrooms() : -1);
-        Furnish furnish = (flatReader.askQuestion("Хотите изменить мебель в квартире?") ?
+        Furnish furnish = (flatReader.askQuestion("ChangeFurnishQuestion") ?
                 flatReader.readFurnish() : null);
-        View view = (flatReader.askQuestion("Хотите изменить вид из квартиры?") ?
+        View view = (flatReader.askQuestion("ChangeViewQuestion") ?
                 flatReader.readView() : null);
-        House house = (flatReader.askQuestion("Хотите изменить house в квартире?") ?
+        House house = (flatReader.askQuestion("ChangeHouseQuestion") ?
                 flatReader.readHouse() : null);
         return new Flat(
                 name,

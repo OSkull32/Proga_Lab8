@@ -11,10 +11,13 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="679.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.gui.MainWindow">
     <VBox alignment="TOP_CENTER" prefHeight="680.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -23,8 +26,8 @@
                 <AnchorPane prefHeight="180.0" prefWidth="200.0">
                     <TableView fx:id="flatTable" prefHeight="598.0" prefWidth="445.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <columns>
-                            <TableColumn fx:id="idColumn" prefWidth="153.0" text="IdColumn" />
-                            <TableColumn fx:id="ownerColumn" prefWidth="47.0" text="OwnerColumn" />
+                            <TableColumn fx:id="idColumn" prefWidth="55.333343505859375" text="IdColumn" />
+                            <TableColumn fx:id="ownerColumn" prefWidth="97.33331298828125" text="OwnerColumn" />
                             <TableColumn fx:id="creationDateColumn" prefWidth="125.0" text="CreationDateColumn" />
                             <TableColumn fx:id="nameColumn" prefWidth="100.0" text="NameColumn" />
                             <TableColumn fx:id="coordinatesXColumn" prefWidth="30.0" text="CoordinatesXColumn" />
@@ -57,7 +60,7 @@
         <Separator prefWidth="200.0" />
         <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="86.0" prefWidth="898.0" vgap="10.0" VBox.vgrow="SOMETIMES">
             <VBox.margin>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets left="10.0" right="10.0" />
             </VBox.margin>
             <Button fx:id="infoButton" mnemonicParsing="false" onAction="#infoButtonOnAction" text="InfoButton">
                 <tooltip>
@@ -69,12 +72,12 @@
                     <Tooltip fx:id="insertButtonTooltip" text="InsertButtonTooltip" />
                 </tooltip>
             </Button>
-            <Button fx:id="filterLessThanHouseButton" mnemonicParsing="false" onAction="#insertButtonOnAction" text="filterLessThanHouseButton">
+            <Button fx:id="filterLessThanHouseButton" mnemonicParsing="false" onAction="#filterLessThanHouseButtonOnAction" text="filterLessThanHouseButton">
                 <tooltip>
                     <Tooltip fx:id="filterLessThanHouseButtonTooltip" text="filterLessThanHouseButtonTooltip" />
                 </tooltip>
             </Button>
-            <Button fx:id="printFieldAscendingButton" mnemonicParsing="false" onAction="#insertButtonOnAction" text="printFieldAscendingButton">
+            <Button fx:id="printFieldAscendingButton" mnemonicParsing="false" onAction="#printFieldAscendingButtonOnAction" text="printFieldAscendingButton">
                 <tooltip>
                     <Tooltip fx:id="printFieldAscendingButtonTooltip" text="printFieldAscendingButtonTooltip" />
                 </tooltip>
@@ -122,9 +125,29 @@
             </Button>
 
         </FlowPane>
+      <Separator prefWidth="200.0" />
+      <ImageView fitHeight="33.0" fitWidth="109.0">
+         <image>
+            <Image url="@../img/itmo_logo.png" />
+         </image>
+         <VBox.margin>
+            <Insets bottom="9.0" />
+         </VBox.margin>
+      </ImageView>
     </VBox>
-    <HBox alignment="CENTER_RIGHT" spacing="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-        <Label fx:id="usernameLabel" text="UsernameLabel" />
+    <HBox alignment="CENTER_RIGHT" prefWidth="375.0" spacing="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <ImageView fitHeight="23.0" fitWidth="22.0">
+         <image>
+            <Image url="@../img/user_icon.png" />
+         </image>
+      </ImageView>
+        <Label fx:id="usernameLabel" prefHeight="17.0" prefWidth="63.0" text="UsernameLabel">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></Label>
         <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonOnAction" text="RefreshButton">
             <tooltip>
                 <Tooltip fx:id="refreshButtonTooltip" text="RefreshButtonTooltip" />
