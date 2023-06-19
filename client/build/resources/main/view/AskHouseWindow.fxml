@@ -10,8 +10,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="202.0" prefWidth="512.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.gui.AskHouseWindow">
-    <GridPane hgap="10.0" layoutX="59.0" layoutY="211.0" prefHeight="175.0" prefWidth="512.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane prefHeight="202.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.gui.AskHouseWindow">
+    <GridPane hgap="10.0" layoutX="59.0" layoutY="211.0" prefHeight="175.0" prefWidth="612.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -27,22 +27,22 @@
         <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
         </padding>
-        <Label fx:id="houseYearLabel" layoutX="25.0" layoutY="419.0" text="houseYearLabel" GridPane.halignment="CENTER">
+        <Label fx:id="houseYearLabel" layoutX="25.0" layoutY="419.0" text="houseYearLabel" GridPane.halignment="RIGHT">
             <font>
                 <Font size="17.0" />
             </font>
         </Label>
-        <Label fx:id="houseNumberOfFloorsLabel" layoutX="25.0" layoutY="419.0" text="houseNumberOfFloorsLabel" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+        <Label fx:id="houseNumberOfFloorsLabel" layoutX="25.0" layoutY="419.0" text="houseNumberOfFloorsLabel" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
             <font>
                 <Font size="17.0" />
             </font>
         </Label>
-        <Label fx:id="houseNumberOfFlatsOnFloorLabel" layoutX="25.0" layoutY="419.0" text="houseNumberOfFlatsOnFloorLabel" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+        <Label fx:id="houseNumberOfFlatsOnFloorLabel" layoutX="25.0" layoutY="419.0" text="houseNumberOfFlatsOnFloorLabel" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
             <font>
                 <Font size="17.0" />
             </font>
         </Label>
-        <Label fx:id="houseNumberOfLiftsLabel" layoutX="25.0" layoutY="419.0" text="houseNumberOfLiftsLabel" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+        <Label fx:id="houseNumberOfLiftsLabel" layoutX="25.0" layoutY="419.0" text="houseNumberOfLiftsLabel" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
             <font>
                 <Font size="17.0" />
             </font>

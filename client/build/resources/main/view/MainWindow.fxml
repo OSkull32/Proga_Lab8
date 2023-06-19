@@ -30,13 +30,13 @@
                             <TableColumn fx:id="ownerColumn" prefWidth="97.33331298828125" text="OwnerColumn" />
                             <TableColumn fx:id="creationDateColumn" prefWidth="125.0" text="CreationDateColumn" />
                             <TableColumn fx:id="nameColumn" prefWidth="100.0" text="NameColumn" />
-                            <TableColumn fx:id="coordinatesXColumn" prefWidth="30.0" text="CoordinatesXColumn" />
-                            <TableColumn fx:id="coordinatesYColumn" prefWidth="30.0" text="CoordinatesYColumn" />
+                            <TableColumn fx:id="coordinatesXColumn" prefWidth="50.0" text="CoordinatesXColumn" />
+                            <TableColumn fx:id="coordinatesYColumn" prefWidth="50.0" text="CoordinatesYColumn" />
                             <TableColumn fx:id="areaColumn" prefWidth="75.0" text="AreaColumn" />
                             <TableColumn fx:id="numberOfRoomsColumn" prefWidth="75.0" text="NumberOfRoomsColumn" />
                             <TableColumn fx:id="numberOfBathroomsColumn" prefWidth="75.0" text="NumberOfBathroomsColumn" />
                             <TableColumn fx:id="furnishColumn" prefWidth="100.0" text="FurnishColumn" />
-                            <TableColumn fx:id="viewColumn" prefWidth="125.0" text="ViewColumn" />
+                            <TableColumn fx:id="viewColumn" prefWidth="100.0" text="ViewColumn" />
                             <TableColumn fx:id="houseNameColumn" prefWidth="100.0" text="HouseNameColumn" />
                             <TableColumn fx:id="houseYearColumn" prefWidth="100.0" text="HouseYearColumn" />
                             <TableColumn fx:id="houseNumberOfFloorsColumn" prefWidth="100.0" text="HouseNumberOfFloorsColumn" />

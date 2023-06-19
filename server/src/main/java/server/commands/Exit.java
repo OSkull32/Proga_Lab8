@@ -17,7 +17,6 @@ public class Exit implements Command {
     @Override
     public String execute(String args, Object objectArgument, User user) throws WrongArgumentException {
         if (!args.isEmpty()) throw new WrongArgumentException();
-        System.exit(0);
         return "";
     }
 

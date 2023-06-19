@@ -149,6 +149,7 @@ public class App extends Application {
             mainWindow.refreshButtonOnAction();
 
             primaryStage.setScene(mainWindowScene);
+            primaryStage.centerOnScreen();
             primaryStage.setMinWidth(mainWindowScene.getWidth());
             primaryStage.setMinHeight(mainWindowScene.getHeight());
             primaryStage.setResizable(true);
