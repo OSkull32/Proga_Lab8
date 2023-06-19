@@ -260,10 +260,10 @@ public class AskWindow {
             houseNumberOfFlatsOnFloor = Long.parseLong(strHouseNumberOfFlatsOnFloor);
             if (houseNumberOfFlatsOnFloor <= 0) throw new InvalidValueException();
         } catch (InvalidValueException exception) {
-            OutputerUI.error("HouseNumberOfFloorsLimitsException", new String[]{String.valueOf(0)});
+            OutputerUI.error("HouseNumberOfFlatsOnFloorLimitsException", new String[]{String.valueOf(0)});
             throw new IllegalArgumentException();
         } catch (NumberFormatException exception) {
-            OutputerUI.error("HouseNumberOfFloorsFormatException");
+            OutputerUI.error("HouseNumberOfFlatsOnFloorFormatException");
             throw new IllegalArgumentException();
         }
         return houseNumberOfFlatsOnFloor;
@@ -281,10 +281,10 @@ public class AskWindow {
                 if (houseNumberOfLifts <= 0) throw new InvalidValueException();
             }
         } catch (InvalidValueException exception) {
-            OutputerUI.error("HouseNumberOfFloorsLimitsException", new String[]{String.valueOf(0)});
+            OutputerUI.error("HouseNumberOfLiftsLimitsException", new String[]{String.valueOf(0)});
             throw new IllegalArgumentException();
         } catch (NumberFormatException exception) {
-            OutputerUI.error("HouseNumberOfFloorsFormatException");
+            OutputerUI.error("HouseNumberOfLiftsFormatException");
             throw new IllegalArgumentException();
         }
         return houseNumberOfLifts;
