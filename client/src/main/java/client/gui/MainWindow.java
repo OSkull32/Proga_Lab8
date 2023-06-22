@@ -13,6 +13,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
@@ -31,6 +32,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class MainWindow {
     public static final String LOGIN_COMMAND_NAME = "login";
@@ -149,6 +152,15 @@ public class MainWindow {
     private ComboBox<String> languageComboBox;
     @FXML
     private Label usernameLabel;
+    @FXML
+    private Label filterByColumnLabel;
+    @FXML
+    private Label filterValueLabel;
+    @FXML
+    private ComboBox<String> filerByColumnComboBox;
+    @FXML
+    private TextField filterValueTextField;
+
 
     private Client client;
     private Stage askStage;
@@ -165,6 +177,8 @@ public class MainWindow {
     private Random randomGenerator;
     private ResourceFactory resourceFactory;
     private Map<String, Locale> localeMap;
+    private ObservableList<Flat> flatList;
+    private List<String> columnNamesList;
 
     public void initialize() {
         initializeTable();
@@ -175,6 +189,7 @@ public class MainWindow {
         textMap = new HashMap<>();
         randomGenerator = new Random(RANDOM_SEED);
         localeMap = ResourceFactory.LOCALE_MAP;
+        filterValueTextField.textProperty().addListener((obs, oldText, newText) -> filter());
         languageComboBox.setItems(FXCollections.observableArrayList(localeMap.keySet()));
     }
 
@@ -214,6 +229,15 @@ public class MainWindow {
     }
 
     private void bindGuiLanguage() {
+
+        List<String> names = columnNamesList.stream()
+                .map(columnName -> resourceFactory.getStringBinding(columnName).get())
+                .toList();
+        int selectedIndex = filerByColumnComboBox.getSelectionModel().getSelectedIndex();
+
+        filerByColumnComboBox.setItems(FXCollections.observableList(names));
+        filerByColumnComboBox.getSelectionModel().select(selectedIndex);
+
         client.setLanguage(languageComboBox.getSelectionModel().getSelectedItem());
         resourceFactory.setResources(ResourceBundle.getBundle
                 (App.BUNDLE, localeMap.get(languageComboBox.getSelectionModel().getSelectedItem())));
@@ -267,6 +291,8 @@ public class MainWindow {
         refreshButtonTooltip.textProperty().bind(resourceFactory.getStringBinding("RefreshButtonTooltip"));
         removeAllByViewTooltip.textProperty().bind(resourceFactory.getStringBinding("RemoveAllByViewTooltip"));
 
+        filterValueLabel.textProperty().bind(resourceFactory.getStringBinding("FilterValueLabel"));
+        filterByColumnLabel.textProperty().bind(resourceFactory.getStringBinding("FilterByColumnLabel"));
     }
 
     private void requestAction(String commandName, String commandStringArgument, Serializable commandObjectArgument) {
@@ -274,9 +300,10 @@ public class MainWindow {
                 commandObjectArgument);
         if (responsedFlat != null) {
             Set<Flat> flatValues = new HashSet<>(responsedFlat.values());
-            ObservableList<Flat> flatList = FXCollections.observableArrayList(flatValues);
+            flatList = FXCollections.observableArrayList(flatValues);
             flatTable.setItems(flatList);
             flatTable.getSelectionModel().clearSelection();
+            filterValueTextField.clear();
             refreshCanvas();
         }
     }
@@ -429,6 +456,13 @@ public class MainWindow {
         requestAction(PRINT_FIELD_ASCENDING_HOUSE_COMMAND_NAME);
     }
 
+    @FXML
+    void filerByColumnComboBoxOnAction(ActionEvent event) {
+        try {
+            filter();
+        } catch (Exception e) {}
+    }
+
     private void refreshCanvas() {
         shapeMap.keySet().forEach(s -> canvasPane.getChildren().remove(s));
         shapeMap.clear();
@@ -531,10 +565,13 @@ public class MainWindow {
         }
         if (languageComboBox.getSelectionModel().getSelectedItem().isEmpty())
             languageComboBox.getSelectionModel().selectFirst();
-//        languageComboBox.setOnAction((event) ->
-//                resourceFactory.setResources(ResourceBundle.getBundle
-//                        (App.BUNDLE, localeMap.get(languageComboBox.getValue()))));
+
+        columnNamesList = flatTable.getColumns().stream()
+                .map(TableColumnBase::getText)
+                .toList();
         bindGuiLanguage();
+        if (filerByColumnComboBox.getSelectionModel().isEmpty())
+            filerByColumnComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -571,6 +608,23 @@ public class MainWindow {
             builder.append(resourceFactory.getStringBinding("HouseHouse").get()).append(": null");
         }
         return builder.toString();
+    }
+
+    void filter() {
+        String target = filterValueTextField.getText().toLowerCase();
+        if (target.trim().equals("")) {
+            flatTable.setItems(FXCollections.observableList(flatList));
+            return;
+        }
+
+        int index = filerByColumnComboBox.getSelectionModel().getSelectedIndex();
+        TableColumn<Flat, ?> column = flatTable.getColumns().get(index);
+        List<Flat> newList = flatList.stream()
+                .filter(flat -> column.getCellObservableValue(flat).getValue() != null)
+                .filter(flat -> column.getCellObservableValue(flat).getValue().toString().toLowerCase().contains(target))
+                .toList();
+
+        flatTable.setItems(FXCollections.observableList(newList));
     }
 
 
