@@ -479,6 +479,10 @@ public class MainWindow {
         long id = shapeMap.get(shape);
         for (Flat flat : flatTable.getItems()) {
             if (flat.getId() == id) {
+                if (event.getClickCount() == 2) { //double-click
+                    OutputerUI.info(localizeFlat(flat));
+                    return;
+                }
                 flatTable.getSelectionModel().select(flat);
                 break;
             }
@@ -538,6 +542,35 @@ public class MainWindow {
         resourceFactory.setResources(ResourceBundle.getBundle
                 (App.BUNDLE, ResourceFactory.LOCALE_MAP.get(languageComboBox.getValue())));
         bindGuiLanguage();
+    }
+
+    private String localizeFlat(Flat flat) {
+        var builder = new StringBuilder();
+        builder.append(resourceFactory.getStringBinding("IdColumn").get()).append(": ").append(flat.getId()).append("\n");
+        builder.append(resourceFactory.getStringBinding("OwnerColumn").get()).append(": ").append(flat.getOwner().getUsername()).append("\n");
+        builder.append(resourceFactory.getStringBinding("CreationDateColumn").get()).append(": ").append(flat.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).append("\n");
+
+        builder.append(resourceFactory.getStringBinding("NameColumn").get()).append(": ").append(flat.getName()).append("\n");
+        builder.append(resourceFactory.getStringBinding("CoordinatesXColumn").get()).append(": ").append(flat.getCoordinates().getX()).append("\n");
+        builder.append(resourceFactory.getStringBinding("CoordinatesYColumn").get()).append(": ").append(flat.getCoordinates().getY()).append("\n");
+        builder.append(resourceFactory.getStringBinding("AreaColumn").get()).append(": ").append(flat.getArea()).append("\n");
+        builder.append(resourceFactory.getStringBinding("NumberOfRoomsColumn").get()).append(": ").append(flat.getNumberOfRooms()).append("\n");
+        builder.append(resourceFactory.getStringBinding("NumberOfBathroomsColumn").get()).append(": ").append(flat.getNumberOfBathrooms()).append("\n");
+
+        builder.append(resourceFactory.getStringBinding("FurnishColumn").get()).append(": ").append(flat.getFurnish()).append("\n");
+        builder.append(resourceFactory.getStringBinding("ViewColumn").get()).append(": ").append(flat.getView()).append("\n");
+
+        if (flat.getHouse() != null) {
+            builder.append(resourceFactory.getStringBinding("HouseHouse").get()).append(": \n");
+            builder.append(resourceFactory.getStringBinding("HouseNameColumn").get()).append(": ").append(flat.getHouse().getName()).append("\n");
+            builder.append(resourceFactory.getStringBinding("HouseYearColumn").get()).append(": ").append(flat.getHouse().getYear()).append("\n");
+            builder.append(resourceFactory.getStringBinding("HouseNumberOfFloorsColumn").get()).append(": ").append(flat.getHouse().getNumberOfFloors()).append("\n");
+            builder.append(resourceFactory.getStringBinding("HouseNumberOfFlatsOnFloorColumn").get()).append(": ").append(flat.getHouse().getNumberOfFlatsOnFloor()).append("\n");
+            builder.append(resourceFactory.getStringBinding("HouseNumberOfLiftsColumn").get()).append(": ").append(flat.getHouse().getNumberOfLifts());
+        } else {
+            builder.append(resourceFactory.getStringBinding("HouseHouse").get()).append(": null");
+        }
+        return builder.toString();
     }
 
 
