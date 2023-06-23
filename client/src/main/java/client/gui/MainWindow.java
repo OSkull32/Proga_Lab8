@@ -51,6 +51,7 @@ public class MainWindow {
     public static final String HISTORY_COMMAND_NAME = "history";
     public static final String FILTER_LESS_THEN_HOUSE_COMMAND_NAME = "filter_less_than_house";
     public static final String PRINT_FIELD_ASCENDING_HOUSE_COMMAND_NAME = "print_field_ascending_house";
+    private static final double DEFAULT_OPACITY = 0.77;
 
     private final long RANDOM_SEED = 1821L;
     private final Duration ANIMATION_DURATION = Duration.millis(800);
@@ -172,6 +173,7 @@ public class MainWindow {
     private Map<String, Color> userColorMap;
     private Map<Shape, Long> shapeMap;
     private Map<Long, Text> textMap;
+    private Set<Flat> flatsOnCanvas;
     private Shape prevClicked;
     private Color prevColor;
     private Random randomGenerator;
@@ -187,10 +189,14 @@ public class MainWindow {
         userColorMap = new HashMap<>();
         shapeMap = new HashMap<>();
         textMap = new HashMap<>();
+        flatsOnCanvas = new HashSet<>();
         randomGenerator = new Random(RANDOM_SEED);
         localeMap = ResourceFactory.LOCALE_MAP;
         filterValueTextField.textProperty().addListener((obs, oldText, newText) -> filter());
         languageComboBox.setItems(FXCollections.observableArrayList(localeMap.keySet()));
+        Thread refreshThread = new Thread(this::startMonitoringChanges);
+        refreshThread.setDaemon(true);
+        refreshThread.start();
     }
 
     private void initializeTable() {
@@ -297,16 +303,13 @@ public class MainWindow {
 
     private void requestAction(String commandName, String commandStringArgument, Serializable commandObjectArgument) {
         Hashtable<Integer, Flat> responsedFlat = client.processRequestToServer(commandName, commandStringArgument,
-                commandObjectArgument);
+                commandObjectArgument, false);
         if (responsedFlat != null) {
-            Set<Flat> flatValues = new HashSet<>(responsedFlat.values());
-            flatList = FXCollections.observableArrayList(flatValues);
-            flatTable.setItems(flatList);
-            flatTable.getSelectionModel().clearSelection();
-            filterValueTextField.clear();
-            refreshCanvas();
+            refreshCanvas(responsedFlat);
         }
     }
+
+
 
     /**
      * Binds request action.
@@ -321,6 +324,7 @@ public class MainWindow {
     @FXML
     public void refreshButtonOnAction() {
         requestAction(REFRESH_COMMAND_NAME);
+        refreshTable();
     }
 
     /**
@@ -340,6 +344,7 @@ public class MainWindow {
         askStage.showAndWait();
         Flat flat = askWindow.getAndClear();
         if (flat != null) requestAction(INSERT_COMMAND_NAME, "", flat);
+        refreshTable();
     }
 
     @FXML
@@ -354,7 +359,7 @@ public class MainWindow {
                 requestAction(UPDATE_COMMAND_NAME, id + "", flat);
             }
         } else OutputerUI.error("UpdateButtonSelectionException");
-
+        refreshTable();
     }
 
 
@@ -364,11 +369,13 @@ public class MainWindow {
             requestAction(REMOVE_KEY_COMMAND_NAME,
                     flatTable.getSelectionModel().getSelectedItem().getIdL().toString(), null);
         else OutputerUI.error("RemoveKeyButtonSelectionException");
+        refreshTable();
     }
 
     @FXML
     private void clearButtonOnAction() {
         requestAction(CLEAR_COMMAND_NAME);
+        refreshTable();
     }
 
     @FXML
@@ -376,7 +383,8 @@ public class MainWindow {
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
         if (selectedFile == null) return;
         if (client.processScriptToServer(selectedFile)) Platform.exit();
-        else refreshButtonOnAction();
+        //else refreshButtonOnAction();
+        refreshTable();
     }
 
     @FXML
@@ -395,6 +403,7 @@ public class MainWindow {
             );
             requestAction(REMOVE_GREATER_KEY_COMMAND_NAME, flatTable.getSelectionModel().getSelectedItem().getIdL().toString(), flat);
         } else OutputerUI.error("RemoveGreaterKeyButtonSelectionException");
+        refreshTable();
     }
 
     @FXML
@@ -413,6 +422,7 @@ public class MainWindow {
             );
             requestAction(REMOVE_ALL_BY_VIEW_COMMAND_NAME, flatTable.getSelectionModel().getSelectedItem().getView().toString(), flat);
         } else OutputerUI.error("RemoveAllByViewButtonSelectionException");
+        refreshTable();
     }
 
 
@@ -432,6 +442,7 @@ public class MainWindow {
             );
             requestAction(REMOVE_LOWER_KEY_COMMAND_NAME, flatTable.getSelectionModel().getSelectedItem().getIdL().toString(), flat);
         } else OutputerUI.error("RemoveLowerKeyButtonSelectionException");
+        refreshTable();
     }
 
     /**
@@ -463,12 +474,14 @@ public class MainWindow {
         } catch (Exception e) {}
     }
 
-    private void refreshCanvas() {
-        shapeMap.keySet().forEach(s -> canvasPane.getChildren().remove(s));
-        shapeMap.clear();
-        textMap.values().forEach(s -> canvasPane.getChildren().remove(s));
-        textMap.clear();
-        for (Flat flat : flatTable.getItems()) {
+    private void refreshCanvas(Hashtable<Integer, Flat> collection) {
+        Set<Flat> newCollection = new HashSet<>(collection.values());
+
+        for (Flat flat : newCollection) { //вставляем все что есть в новой коллекции, но не было в старой
+            if (flatsOnCanvas.contains(flat)) {
+                flatsOnCanvas.remove(flat);
+                continue;
+            }
             if (!userColorMap.containsKey(flat.getOwner().getUsername()))
                 userColorMap.put(flat.getOwner().getUsername(),
                         Color.color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble()));
@@ -479,6 +492,7 @@ public class MainWindow {
             circleObject.setOnMouseClicked(this::shapeOnMouseClicked);
             circleObject.translateXProperty().bind(canvasPane.widthProperty().divide(2).add(flat.getCoordinates().getX()));
             circleObject.translateYProperty().bind(canvasPane.heightProperty().divide(2).subtract(flat.getCoordinates().getY()));
+            circleObject.opacityProperty().set(DEFAULT_OPACITY);
 
             Text textObject = new Text(flat.getIdL().toString());
             textObject.setOnMouseClicked(circleObject::fireEvent);
@@ -506,6 +520,26 @@ public class MainWindow {
             circleAnimation.play();
             textAnimation.play();
         }
+
+        for (Flat flat : flatsOnCanvas) { //удаляем то что было в старой коллекции, но нет в новой
+
+            long flatId = flat.getId();
+            textMap.keySet().forEach(id -> {if (flatId == id) {
+                canvasPane.getChildren().remove(textMap.get(id));
+            }});
+            shapeMap.keySet().forEach(shape -> {if (flatId == shapeMap.get(shape)) {
+                canvasPane.getChildren().remove(shape);
+            }});
+        }
+        flatsOnCanvas = newCollection;
+    }
+
+    private void refreshTable() {
+        var responsedFlat = client.getCollection();
+        flatList = FXCollections.observableArrayList(new HashSet<>(responsedFlat.values()));
+        flatTable.setItems(flatList);
+        flatTable.getSelectionModel().clearSelection();
+        filterValueTextField.clear();
     }
 
     private void shapeOnMouseClicked(MouseEvent event) {
@@ -625,6 +659,23 @@ public class MainWindow {
                 .toList();
 
         flatTable.setItems(FXCollections.observableList(newList));
+    }
+
+    //запускать в отдельном потоке
+    private void startMonitoringChanges() {
+        while (true) {
+            if (client != null) {
+                Hashtable<Integer, Flat> responsedFlat = client.processRequestToServer(REFRESH_COMMAND_NAME, "", null, true);
+                if (responsedFlat != null) {
+                    refreshCanvas(responsedFlat);
+                }
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
     }
 
 

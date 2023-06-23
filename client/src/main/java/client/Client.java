@@ -32,6 +32,7 @@ public class Client implements Runnable{
     private boolean isConnected;
     private String currentLanguage;
     private final List<String> historyList;
+    private Hashtable<Integer, Flat> collection;
 
     public Client(String host, int port) {
         this.host = host;
@@ -52,7 +53,7 @@ public class Client implements Runnable{
 
     public void stop() {
         try {
-            processRequestToServer(MainWindow.EXIT_COMMAND_NAME, "", null);
+            processRequestToServer(MainWindow.EXIT_COMMAND_NAME, "", null, false);
             socketChannel.close();
             UserConsole.printCommandTextNext("EndWorkOfClient");
         } catch (IOException | NullPointerException exception) {
@@ -63,7 +64,7 @@ public class Client implements Runnable{
 
     private void connectToServer() throws ConnectionErrorException, InvalidValueException {
         try {
-            UserConsole.printCommandTextNext("ConnectionToServer");
+            //UserConsole.printCommandTextNext("ConnectionToServer");
             socketChannel = SocketChannel.open(new InetSocketAddress(host, port));
             serverWriter = new ObjectOutputStream(socketChannel.socket().getOutputStream());
             serverReader = new ObjectInputStream(socketChannel.socket().getInputStream());
@@ -75,7 +76,7 @@ public class Client implements Runnable{
             throw new InvalidValueException();
         } catch (IOException exception) {
             //exception.printStackTrace();
-            UserConsole.printCommandError("ConnectionToServerException");
+            //UserConsole.printCommandError("ConnectionToServerException");
             isConnected = false;
             throw new ConnectionErrorException();
         }
@@ -89,33 +90,45 @@ public class Client implements Runnable{
         return user == null ? null : user.getUsername();
     }
 
-    public Hashtable<Integer, Flat> processRequestToServer(String commandName, String commandStringArgument,
-                                                           Serializable commandObjectArgument) {
+    public synchronized Hashtable<Integer, Flat> processRequestToServer(String commandName, String commandStringArgument,
+                                                           Serializable commandObjectArgument, boolean silentMode) {
         Request requestToServer = null;
         Response serverResponse = null;
         try {
             requestToServer = new Request(commandName, commandStringArgument, commandObjectArgument, user, currentLanguage);
+            requestToServer.setCollectionHashCode(collection != null ? collection.hashCode() : 1);
             serverWriter.writeObject(requestToServer);
             serverResponse = (Response) serverReader.readObject();
             if (!serverResponse.getResponseBody().isEmpty()) {
-                OutputerUI.tryError(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
+                if (!silentMode)
+                    OutputerUI.tryError(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
                 addToHistory(commandName);
             }
         } catch (InvalidClassException | NotSerializableException exception) {
-            OutputerUI.error("DataSendingException");
+            if (!silentMode)
+                OutputerUI.error("DataSendingException");
         } catch (ClassNotFoundException exception) {
-            OutputerUI.error("DataReadingException");
+            if (!silentMode)
+                OutputerUI.error("DataReadingException");
         } catch (IOException exception) {
             if (requestToServer.getCommandName().equals(MainWindow.EXIT_COMMAND_NAME)) return null;
-            OutputerUI.error("EndConnectionToServerException");
+            if (!silentMode)
+                OutputerUI.error("EndConnectionToServerException");
             try {
                 connectToServer();
-                OutputerUI.info("ConnectionToServerComplete");
+                if (!silentMode)
+                    OutputerUI.info("ConnectionToServerComplete");
             } catch (ConnectionErrorException | InvalidValueException reconnectionException) {
-                OutputerUI.info("TryCommandLater");
+                if (!silentMode)
+                    OutputerUI.info("TryCommandLater");
             }
         }
-        return serverResponse == null ? null : serverResponse.getFlatCollection();
+        if (serverResponse == null || serverResponse.getFlatCollection() == null)
+            return null;
+        else {
+            this.collection = serverResponse.getFlatCollection();
+            return serverResponse.getFlatCollection();
+        }
     }
 
     public boolean processAuthentication(String username, String password, boolean register) {
@@ -193,5 +206,9 @@ public class Client implements Runnable{
 
     public List<String> getHistoryList() {
         return historyList;
+    }
+
+    public Hashtable<Integer, Flat> getCollection() {
+        return collection;
     }
 }

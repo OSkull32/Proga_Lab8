@@ -35,6 +35,11 @@ public class HandleRequest {
             user = adaptUser(user, request.getLanguage());
             answer = executeCommand(request.getCommandName(), request.getCommandStringArgument(),
                     request.getCommandObjectArgument(), user);
+//            if (!answer.isEmpty()) {
+//                responseCode = ResponseCode.OK;
+//            } else {
+//                responseCode = ResponseCode.REFRESH;
+//            }
             responseCode = ResponseCode.OK;
         } catch (InvalidCommandException | WrongArgumentException e) {
             App.logger.warning("Ошибка " + e.getClass() + " при попытке исполнить команду: " + request.getCommandName());
@@ -47,8 +52,18 @@ public class HandleRequest {
             answer = "Токен всё. Нужна повторная авторизация\n";
             responseCode = ResponseCode.TOKEN_EXPIRED;
         }
+        int clientHash = request.getCollectionHashCode();
+        int serverHash = collectionManager.getCollection().hashCode();
+        Hashtable<Integer, Flat> collectionToResponse;
+        if (clientHash == serverHash || clientHash == 0) {
+            collectionToResponse = null;
+            System.out.println("null");
+        } else {
+            collectionToResponse = (Hashtable<Integer, Flat>) collectionManager.getCollection().clone();
+            System.out.println("not null");
+        }
 
-        client.setServerResponse(new Response(responseCode, answer, new User(null, null).setToken(user.getToken()), ResponseOutputer.getArgsAndClear(), (Hashtable<Integer, Flat>) collectionManager.getCollection().clone()));
+        client.setServerResponse(new Response(responseCode, answer, new User(null, null).setToken(user.getToken()), null, collectionToResponse));
         return client;
     }
 

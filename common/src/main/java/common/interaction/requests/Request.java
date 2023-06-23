@@ -13,6 +13,7 @@ public class Request implements Serializable {
     private Serializable commandObjectArgument;
     private User user;
     private String language;
+    private int collectionHashCode;
 
     public Request(String commandName, String commandStringArgument, Serializable commandObjectArgument, User user, String language) {
         this.commandName = commandName;
@@ -68,6 +69,14 @@ public class Request implements Serializable {
 
     public String getLanguage() {
         return language;
+    }
+
+    public int getCollectionHashCode() {
+        return collectionHashCode;
+    }
+
+    public void setCollectionHashCode(int collectionHashCode) {
+        this.collectionHashCode = collectionHashCode;
     }
 
     @Override

@@ -7,6 +7,7 @@ import common.utility.LocalDateTimeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * Класс объектов коллекции
@@ -363,6 +364,19 @@ public class Flat implements Comparable<Flat>, Serializable {
                 ", \nview=" + view +
                 ", \nhouse=" + house +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Flat flat = (Flat) o;
+        return area == flat.area && numberOfRooms == flat.numberOfRooms && numberOfBathrooms == flat.numberOfBathrooms && name.equals(flat.name) && coordinates.equals(flat.coordinates) && furnish == flat.furnish && view == flat.view && Objects.equals(house, flat.house) && owner.equals(flat.owner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, coordinates, area, numberOfRooms, numberOfBathrooms, furnish != null ? furnish.toString() : null, view != null ? view.toString() : null, house, owner);
     }
 
     @Override

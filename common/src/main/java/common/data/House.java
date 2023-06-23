@@ -1,6 +1,7 @@
 package common.data;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Класс - дом объекта класса Flat
@@ -146,6 +147,19 @@ public class House implements Comparable<House>, Serializable {
                 ", numberOfFlatsOnFloor=" + numberOfFlatsOnFloor +
                 ", numberOfLifts=" + numberOfLifts +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        House house = (House) o;
+        return year == house.year && numberOfFlatsOnFloor == house.numberOfFlatsOnFloor && name.equals(house.name) && Objects.equals(numberOfFloors, house.numberOfFloors) && Objects.equals(numberOfLifts, house.numberOfLifts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, year, numberOfFloors, numberOfFlatsOnFloor, numberOfLifts);
     }
 
     /**
