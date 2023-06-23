@@ -72,6 +72,11 @@ public class OutputerUI {
         else msg(INFO_TITLE, toOut, args, AlertType.INFORMATION);
     }
 
+    public static void tryErrorScript(String toOut, String[] args) {
+        if (toOut.startsWith("error: "))
+            msg(ERROR_TITLE, toOut.substring(7), args, AlertType.ERROR);
+    }
+
     /**
      * Выводит ошибку, если объект начинается с 'error:', или информацию в другом случае.
      *
