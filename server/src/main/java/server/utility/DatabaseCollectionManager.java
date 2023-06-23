@@ -385,7 +385,7 @@ public class DatabaseCollectionManager {
                 preparedUpdateHouseStatement.setLong(3, flat.getHouse().getNumberOfFloors());
                 preparedUpdateHouseStatement.setLong(4, flat.getHouse().getNumberOfFlatsOnFloor());
                 preparedUpdateHouseStatement.setLong(5, flat.getHouse().getNumberOfLifts());
-                preparedUpdateHouseStatement.setLong(6, flatId);
+                preparedUpdateHouseStatement.setLong(6, getHouseIdByFlatId(flatId));
                 if (preparedUpdateHouseStatement.executeUpdate() == 0) throw new SQLException();
                 App.logger.info("Выполнен запрос UPDATE_HOUSE_BY_ID");
             }

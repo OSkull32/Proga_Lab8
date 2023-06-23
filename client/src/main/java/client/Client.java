@@ -163,7 +163,7 @@ public class Client implements Runnable{
                 serverWriter.writeObject(requestToServer);
                 serverResponse = (Response) serverReader.readObject();
                 if (!serverResponse.getResponseBody().isEmpty())
-                    OutputerUI.tryError(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
+                    OutputerUI.tryErrorScript(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
             } catch (InvalidClassException | NotSerializableException exception) {
                 OutputerUI.error("DataSendingException");
             } catch (ClassNotFoundException exception) {
