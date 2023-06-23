@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class JWTService {
     private static final String SECRET = "secret123@$&#@^secret";
-    private static final long DEFAULT_EXPIRE_IN_MILLISECONDS = 15 * 60 * 1000; //миллисекунд
+    private static final long DEFAULT_EXPIRE_IN_MILLISECONDS = 40 * 60 * 1000; //миллисекунд
     private static final Algorithm ALGORITHM = Algorithm.HMAC256(SECRET);
     private static final String ISSUER = "My server";
     private static final String CLAIM_USERNAME = "username";

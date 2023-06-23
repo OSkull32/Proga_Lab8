@@ -4,6 +4,9 @@ import client.gui.ResourceFactory;
 import common.exceptions.ErrorInScriptException;
 
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
+import java.util.MissingFormatArgumentException;
+import java.util.MissingResourceException;
 import java.util.Scanner;
 
 public class UserConsole {
@@ -33,6 +36,20 @@ public class UserConsole {
      */
     public UserConsole(Scanner scanner) {
         this.scanner = scanner;
+    }
+
+    private static String tryResource(String str, String arg) {
+        try {
+            if (haveResourceFactory()) throw new NullPointerException();
+            if (arg == null) return resourceFactory.getResources().getString(str);
+            else {
+                MessageFormat messageFormat = new MessageFormat(resourceFactory.getResources().getString(str));
+                Object[] args = {arg};
+                return messageFormat.format(args);
+            }
+        } catch (MissingResourceException | NullPointerException ex) {
+            return str;
+        }
     }
 
     /**
@@ -77,34 +94,43 @@ public class UserConsole {
     /**
      * Метод, выводящий текст в стандартный поток вывода с переносом строки.
      *
-     * @param str строка, которая выводиться в стандартный поток вывода
+     * @param toOut строка, которая выводиться в стандартный поток вывода
      */
 
-    public static void printCommandTextNext(String str) {
-        System.out.println(str);
+    public static void printCommandTextNext(String toOut, String arg) {
+        System.out.println(tryResource(toOut, arg));
+    }
+
+    public static void printCommandTextNext(String toOut) {
+        printCommandTextNext(toOut, null);
     }
 
     /**
      * Метод, выводящий текст в стандартный поток вывода без переноса строки.
      *
-     * @param str строка, которая выводиться в стандартный поток вывода
+     * @param toOut строка, которая выводиться в стандартный поток вывода
      */
 
-    public static void printCommandText(String str) {
-        System.out.print(str);
+    public static void printCommandText(String toOut, String arg) {
+        System.out.print(tryResource(toOut, arg));
+    }
+
+    public static void printCommandText(String toOut) {
+       printCommandText(toOut, null);
     }
 
     /**
      * Метод, выводящий текст ошибки в стандартный поток вывода ошибок
      *
-     * @param str строка, которая выводиться в стандартный поток вывода ошибок
+     * @param toOut строка, которая выводиться в стандартный поток вывода ошибок
      */
 
-    public static void printCommandError(String str) {
-        System.out.println(ANSI_RED + "Ошибка: " + str + ANSI_RESET);
-        if (scriptMode) {
-            throw new ErrorInScriptException();
-        }
+    public static void printCommandError(String toOut, String arg) {
+        System.out.println(ANSI_RED + "error: " + tryResource(toOut, arg) + ANSI_RESET);
+    }
+
+    public static void printCommandError(String toOut) {
+        printCommandError(toOut, null);
     }
 
     /**
@@ -117,5 +143,9 @@ public class UserConsole {
 
     public static void setResourceFactory(ResourceFactory resourceFactory) {
         UserConsole.resourceFactory = resourceFactory;
+    }
+
+    public static boolean haveResourceFactory() {
+        return resourceFactory == null;
     }
 }

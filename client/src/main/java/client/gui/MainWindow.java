@@ -5,6 +5,7 @@ import client.utility.OutputerUI;
 import client.App;
 import common.data.Flat;
 import common.data.Furnish;
+import common.data.House;
 import common.data.View;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
@@ -28,9 +29,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MainWindow {
     public static final String LOGIN_COMMAND_NAME = "login";
@@ -51,7 +51,7 @@ public class MainWindow {
 
     private final long RANDOM_SEED = 1821L;
     private final Duration ANIMATION_DURATION = Duration.millis(800);
-    private final double MAX_SIZE = 250;
+    private final double MAX_SIZE = 150;
 
     @FXML
     private TableView<Flat> flatTable;
@@ -60,7 +60,7 @@ public class MainWindow {
     @FXML
     private TableColumn<Flat, String> ownerColumn;
     @FXML
-    private TableColumn<Flat, LocalDateTime> creationDateColumn;
+    private TableColumn<Flat, String> creationDateColumn;
     @FXML
     private TableColumn<Flat, String> nameColumn;
     @FXML
@@ -153,8 +153,10 @@ public class MainWindow {
     private Client client;
     private Stage askStage;
     private Stage primaryStage;
+    private Stage askHouseStage;
     private FileChooser fileChooser;
     private AskWindow askWindow;
+    private AskHouseWindow askHouseWindow;
     private Map<String, Color> userColorMap;
     private Map<Shape, Long> shapeMap;
     private Map<Long, Text> textMap;
@@ -182,7 +184,7 @@ public class MainWindow {
         ownerColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getOwner().getUsername()));
         creationDateColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
         nameColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getName()));
         areaColumn.setCellValueFactory(cellData ->
@@ -200,15 +202,15 @@ public class MainWindow {
         viewColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getView()));
         houseNameColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getName()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getName()));
         houseYearColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getYear()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getYear()));
         houseNumberOfFloorsColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getNumberOfFloors()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getNumberOfFloors()));
         houseNumberOfFlatsOnFloorColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getNumberOfFlatsOnFloor()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getNumberOfFlatsOnFloor()));
         houseNumberOfLiftsColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse().getNumberOfLifts()));
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getHouse() == null ? null : cellData.getValue().getHouse().getNumberOfLifts()));
     }
 
     private void bindGuiLanguage() {
@@ -223,6 +225,8 @@ public class MainWindow {
         coordinatesXColumn.textProperty().bind(resourceFactory.getStringBinding("CoordinatesXColumn"));
         coordinatesYColumn.textProperty().bind(resourceFactory.getStringBinding("CoordinatesYColumn"));
         areaColumn.textProperty().bind(resourceFactory.getStringBinding("AreaColumn"));
+        numberOfRoomsColumn.textProperty().bind(resourceFactory.getStringBinding("NumberOfRoomsColumn"));
+        numberOfBathroomsColumn.textProperty().bind(resourceFactory.getStringBinding("NumberOfBathroomsColumn"));
         furnishColumn.textProperty().bind(resourceFactory.getStringBinding("FurnishColumn"));
         viewColumn.textProperty().bind(resourceFactory.getStringBinding("ViewColumn"));
         houseNameColumn.textProperty().bind(resourceFactory.getStringBinding("HouseNameColumn"));
@@ -412,6 +416,19 @@ public class MainWindow {
         client.addToHistory("history");
     }
 
+    @FXML
+    private void filterLessThanHouseButtonOnAction() {
+        askHouseWindow.clearHouse();
+        askHouseStage.showAndWait();
+        House house = askHouseWindow.getAndClear();
+        if (house != null) requestAction(FILTER_LESS_THEN_HOUSE_COMMAND_NAME, "", house);
+    }
+
+    @FXML
+    private void printFieldAscendingButtonOnAction() {
+        requestAction(PRINT_FIELD_ASCENDING_HOUSE_COMMAND_NAME);
+    }
+
     private void refreshCanvas() {
         shapeMap.keySet().forEach(s -> canvasPane.getChildren().remove(s));
         shapeMap.clear();
@@ -486,12 +503,20 @@ public class MainWindow {
         this.askStage = askStage;
     }
 
+    public void setAskHouseStage(Stage askHouseStage) {
+        this.askHouseStage = askHouseStage;
+    }
+
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
 
     public void setAskWindow(AskWindow askWindow) {
         this.askWindow = askWindow;
+    }
+
+    public void setAskHouseWindow(AskHouseWindow askHouseWindow) {
+        this.askHouseWindow = askHouseWindow;
     }
 
     public void initLangs(ResourceFactory resourceFactory) {

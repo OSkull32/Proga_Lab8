@@ -8,5 +8,6 @@ import java.io.Serializable;
 public enum View implements Serializable {
     STREET,
     NORMAL,
-    TERRIBLE
+    TERRIBLE,
+    NULL
 }

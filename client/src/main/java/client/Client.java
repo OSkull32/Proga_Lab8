@@ -1,10 +1,8 @@
 package client;
 
 import client.gui.MainWindow;
-import client.utility.AuthenticationHandler;
 import client.utility.OutputerUI;
 import client.utility.ScriptHandler;
-import client.utility.UserHandler;
 import common.data.Flat;
 import common.exceptions.ConnectionErrorException;
 import common.exceptions.InvalidValueException;
@@ -17,7 +15,6 @@ import client.utility.UserConsole;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -156,7 +153,7 @@ public class Client implements Runnable{
     public boolean processScriptToServer(File scriptFile) {
         Request requestToServer = null;
         Response serverResponse = null;
-        ScriptHandler scriptHandler = new ScriptHandler(scriptFile);
+        ScriptHandler scriptHandler = new ScriptHandler(scriptFile, currentLanguage);
         do {
             try {
                 requestToServer = serverResponse != null ? scriptHandler.handle(serverResponse.getResponseCode(), user) :

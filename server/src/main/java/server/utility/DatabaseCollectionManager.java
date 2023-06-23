@@ -392,7 +392,6 @@ public class DatabaseCollectionManager {
 
             databaseHandler.commit();
         } catch (SQLException ex) {
-            ex.printStackTrace();
             App.logger.severe("Произошла ошибка при выполнении группы запросов на обновление объекта");
             databaseHandler.rollback();
             throw new DatabaseHandlingException();
