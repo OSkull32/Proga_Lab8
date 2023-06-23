@@ -18,6 +18,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Класс запускающий клиент
@@ -33,6 +35,7 @@ public class Client implements Runnable{
     private String currentLanguage;
     private final List<String> historyList;
     private Hashtable<Integer, Flat> collection;
+    private final Lock lock = new ReentrantLock();
 
     public Client(String host, int port) {
         this.host = host;
@@ -90,15 +93,17 @@ public class Client implements Runnable{
         return user == null ? null : user.getUsername();
     }
 
-    public synchronized Hashtable<Integer, Flat> processRequestToServer(String commandName, String commandStringArgument,
+    public Hashtable<Integer, Flat> processRequestToServer(String commandName, String commandStringArgument,
                                                            Serializable commandObjectArgument, boolean silentMode) {
         Request requestToServer = null;
         Response serverResponse = null;
         try {
             requestToServer = new Request(commandName, commandStringArgument, commandObjectArgument, user, currentLanguage);
             requestToServer.setCollectionHashCode(collection != null ? collection.hashCode() : 1);
+            lock.lock();
             serverWriter.writeObject(requestToServer);
             serverResponse = (Response) serverReader.readObject();
+            lock.unlock();
             if (!serverResponse.getResponseBody().isEmpty()) {
                 if (!silentMode)
                     OutputerUI.tryError(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
@@ -140,8 +145,10 @@ public class Client implements Runnable{
             command = register ? MainWindow.REGISTER_COMMAND_NAME : MainWindow.LOGIN_COMMAND_NAME;
             requestToServer = new Request(command, "", null, new User(username, password), currentLanguage);
             if (serverWriter == null) throw new IOException();
+            lock.lock();
             serverWriter.writeObject(requestToServer);
             serverResponse = (Response) serverReader.readObject();
+            lock.unlock();
             OutputerUI.tryError(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
         } catch (InvalidClassException | NotSerializableException exception) {
             OutputerUI.error("DataSendingException");
@@ -173,8 +180,10 @@ public class Client implements Runnable{
                         scriptHandler.handle(null, user);
                 if (requestToServer == null) return false;
                 if (requestToServer.isEmpty()) continue;
+                lock.lock();
                 serverWriter.writeObject(requestToServer);
                 serverResponse = (Response) serverReader.readObject();
+                lock.unlock();
                 if (!serverResponse.getResponseBody().isEmpty())
                     OutputerUI.tryErrorScript(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
             } catch (InvalidClassException | NotSerializableException exception) {

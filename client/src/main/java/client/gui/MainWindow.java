@@ -383,8 +383,7 @@ public class MainWindow {
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
         if (selectedFile == null) return;
         if (client.processScriptToServer(selectedFile)) Platform.exit();
-        //else refreshButtonOnAction();
-        refreshTable();
+        refreshButtonOnAction();
     }
 
     @FXML
@@ -540,6 +539,7 @@ public class MainWindow {
         flatTable.setItems(flatList);
         flatTable.getSelectionModel().clearSelection();
         filterValueTextField.clear();
+        refreshCanvas(responsedFlat);
     }
 
     private void shapeOnMouseClicked(MouseEvent event) {
@@ -667,7 +667,7 @@ public class MainWindow {
             if (client != null) {
                 Hashtable<Integer, Flat> responsedFlat = client.processRequestToServer(REFRESH_COMMAND_NAME, "", null, true);
                 if (responsedFlat != null) {
-                    refreshCanvas(responsedFlat);
+                    Platform.runLater(() -> refreshCanvas(responsedFlat));
                 }
             }
             try {
