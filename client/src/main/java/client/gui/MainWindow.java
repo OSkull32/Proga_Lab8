@@ -419,7 +419,8 @@ public class MainWindow {
                     flatFromTable.getView(),
                     flatFromTable.getHouse()
             );
-            requestAction(REMOVE_ALL_BY_VIEW_COMMAND_NAME, flatTable.getSelectionModel().getSelectedItem().getView().toString(), flat);
+            var view = flatTable.getSelectionModel().getSelectedItem().getView(); //fix null pointer
+            requestAction(REMOVE_ALL_BY_VIEW_COMMAND_NAME, view == null ? "null" : view.toString(), flat);
         } else OutputerUI.error("RemoveAllByViewButtonSelectionException");
         refreshTable();
     }
@@ -475,53 +476,17 @@ public class MainWindow {
 
     private void refreshCanvas(Hashtable<Integer, Flat> collection) {
         Set<Flat> newCollection = new HashSet<>(collection.values());
+        Set<Flat> toDraw = new HashSet<>();
 
         for (Flat flat : newCollection) { //вставляем все что есть в новой коллекции, но не было в старой
-            if (flatsOnCanvas.contains(flat)) {
+            if (!flatsOnCanvas.contains(flat)) {
+                toDraw.add(flat);
+            } else {
                 flatsOnCanvas.remove(flat);
-                continue;
             }
-            if (!userColorMap.containsKey(flat.getOwner().getUsername()))
-                userColorMap.put(flat.getOwner().getUsername(),
-                        Color.color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble()));
-
-            double size = Math.min(flat.getArea(), MAX_SIZE);
-
-            Shape circleObject = new Circle(size, userColorMap.get(flat.getOwner().getUsername()));
-            circleObject.setOnMouseClicked(this::shapeOnMouseClicked);
-            circleObject.translateXProperty().bind(canvasPane.widthProperty().divide(2).add(flat.getCoordinates().getX()));
-            circleObject.translateYProperty().bind(canvasPane.heightProperty().divide(2).subtract(flat.getCoordinates().getY()));
-            circleObject.opacityProperty().set(DEFAULT_OPACITY);
-
-            Text textObject = new Text(flat.getIdL().toString());
-            textObject.setOnMouseClicked(circleObject::fireEvent);
-            textObject.setFont(Font.font(size / 3));
-            textObject.setFill(userColorMap.get(flat.getOwner().getUsername()).darker());
-            textObject.translateXProperty().bind(circleObject.translateXProperty().subtract(textObject.getLayoutBounds().getWidth() / 2));
-            textObject.translateYProperty().bind(circleObject.translateYProperty().add(textObject.getLayoutBounds().getHeight() / 4));
-
-            canvasPane.getChildren().add(circleObject);
-            canvasPane.getChildren().add(textObject);
-            shapeMap.put(circleObject, (long) flat.getId());
-            textMap.put((long) flat.getId(), textObject);
-
-
-            ScaleTransition circleAnimation = new ScaleTransition(ANIMATION_DURATION, circleObject);
-            ScaleTransition textAnimation = new ScaleTransition(ANIMATION_DURATION, textObject);
-            circleAnimation.setFromX(0);
-            circleAnimation.setToX(1);
-            circleAnimation.setFromY(0);
-            circleAnimation.setToY(1);
-            textAnimation.setFromX(0);
-            textAnimation.setToX(1);
-            textAnimation.setFromY(0);
-            textAnimation.setToY(1);
-            circleAnimation.play();
-            textAnimation.play();
         }
 
         for (Flat flat : flatsOnCanvas) { //удаляем то что было в старой коллекции, но нет в новой
-
             long flatId = flat.getId();
             textMap.keySet().forEach(id -> {if (flatId == id) {
                 canvasPane.getChildren().remove(textMap.get(id));
@@ -530,7 +495,47 @@ public class MainWindow {
                 canvasPane.getChildren().remove(shape);
             }});
         }
+
+        toDraw.forEach(this::drawNewObject);
         flatsOnCanvas = newCollection;
+    }
+
+    private void drawNewObject(Flat flat) {
+        if (!userColorMap.containsKey(flat.getOwner().getUsername()))
+            userColorMap.put(flat.getOwner().getUsername(), Color.color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble()));
+
+        double size = Math.min(flat.getArea(), MAX_SIZE);
+
+        Shape circleObject = new Circle(size, userColorMap.get(flat.getOwner().getUsername()));
+        circleObject.setOnMouseClicked(this::shapeOnMouseClicked);
+        circleObject.translateXProperty().bind(canvasPane.widthProperty().divide(2).add(flat.getCoordinates().getX()));
+        circleObject.translateYProperty().bind(canvasPane.heightProperty().divide(2).subtract(flat.getCoordinates().getY()));
+        circleObject.opacityProperty().set(DEFAULT_OPACITY);
+
+        Text textObject = new Text(flat.getIdL().toString());
+        textObject.setOnMouseClicked(circleObject::fireEvent);
+        textObject.setFont(Font.font(size / 3));
+        textObject.setFill(userColorMap.get(flat.getOwner().getUsername()).darker());
+        textObject.translateXProperty().bind(circleObject.translateXProperty().subtract(textObject.getLayoutBounds().getWidth() / 2));
+        textObject.translateYProperty().bind(circleObject.translateYProperty().add(textObject.getLayoutBounds().getHeight() / 4));
+
+        canvasPane.getChildren().add(circleObject);
+        canvasPane.getChildren().add(textObject);
+        shapeMap.put(circleObject, (long) flat.getId());
+        textMap.put((long) flat.getId(), textObject);
+
+        ScaleTransition circleAnimation = new ScaleTransition(ANIMATION_DURATION, circleObject);
+        ScaleTransition textAnimation = new ScaleTransition(ANIMATION_DURATION, textObject);
+        circleAnimation.setFromX(0);
+        circleAnimation.setToX(1);
+        circleAnimation.setFromY(0);
+        circleAnimation.setToY(1);
+        textAnimation.setFromX(0);
+        textAnimation.setToX(1);
+        textAnimation.setFromY(0);
+        textAnimation.setToY(1);
+        circleAnimation.play();
+        textAnimation.play();
     }
 
     private void refreshTable() {
