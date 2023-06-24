@@ -371,7 +371,7 @@ public class Flat implements Comparable<Flat>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Flat flat = (Flat) o;
-        return area == flat.area && numberOfRooms == flat.numberOfRooms && numberOfBathrooms == flat.numberOfBathrooms && name.equals(flat.name) && coordinates.equals(flat.coordinates) && furnish == flat.furnish && view == flat.view && Objects.equals(house, flat.house) && owner.equals(flat.owner);
+        return area == flat.area && numberOfRooms == flat.numberOfRooms && numberOfBathrooms == flat.numberOfBathrooms && name.equals(flat.name) && coordinates.equals(flat.coordinates) && creationDate.equals(flat.creationDate) && furnish == flat.furnish && view == flat.view && Objects.equals(house, flat.house) && owner.equals(flat.owner);
     }
 
     @Override
