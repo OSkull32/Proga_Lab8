@@ -46,10 +46,10 @@ public class Insert implements Command {
             }
 
         } catch (IndexOutOfBoundsException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "InsertWrongArguments").get());
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "InsertWrongArguments").get());
         } catch (NumberFormatException ignored) {
         } catch (DatabaseHandlingException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "InsertErrorDatabase").get());
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "InsertErrorDatabase").get());
         }
         return builder.toString();
     }

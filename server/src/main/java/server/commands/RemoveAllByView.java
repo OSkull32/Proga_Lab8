@@ -61,15 +61,15 @@ public class RemoveAllByView implements Command {
             if (size == 0) builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewNoElements").get()).append("\n");
             else builder.append(count).append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewElementsDeleted").get()).append("\n");
         } catch (IllegalArgumentException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewNoSuchConstant").get()).append("\n");
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewAllConstants").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewNoSuchConstant").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewAllConstants").get()).append("\n");
             for (View view : View.values()) {
                 builder.append(view.toString()).append("\n");
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewWrongArguments").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewWrongArguments").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewErrorDatabase").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveAllByViewErrorDatabase").get()).append("\n");
         }
         return builder.toString();
     }

@@ -53,11 +53,11 @@ public class RemoveLowerKey implements Command {
             if (size == 0) builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyNoLowerElements").get()).append("\n");
             else builder.append(count).append(" ").append(ResourceFactory.getStringBinding(lang, "RemoveKeyElementsDeleted").get()).append("\n");
         } catch (IndexOutOfBoundsException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgument").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgument").get()).append("\n");
         } catch (NumberFormatException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgumentFormat").get()).append(ex.getMessage()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgumentFormat").get()).append(ex.getMessage()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyErrorDatabase").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveKeyErrorDatabase").get()).append("\n");
         }
         return builder.toString();
     }

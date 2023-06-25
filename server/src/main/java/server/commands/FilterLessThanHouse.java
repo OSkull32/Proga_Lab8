@@ -71,10 +71,10 @@ public class FilterLessThanHouse implements Command {
         } catch (NumberFormatException e) {
             throw new WrongArgumentException(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseWrongArgument").get());
         } catch (Exception ex) { //на случай непредвиденного null pointer (хотя по идее не должно возникнуть)
-            builder.append(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseWrongArgument2").get());
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseWrongArgument2").get());
         }
         if (builder.toString().equals(""))
-            builder.append(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseNoSuchHouse").get());
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "FilterLessThanHouseNoSuchHouse").get());
         return builder.toString();
     }
 
