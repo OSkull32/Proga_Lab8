@@ -46,16 +46,16 @@ public class RemoveKey implements Command {
                 builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeySuccess").get()).append("\n");
             } else builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyNoSuchItem").get()).append("\n");
         } catch (IndexOutOfBoundsException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgument").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgument").get()).append("\n");
         } catch (NumberFormatException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgumentFormat").get()).append(ex.getMessage()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveKeyWrongArgumentFormat").get()).append(ex.getMessage()).append("\n");
         } catch (PermissionDeniedException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyNotEnoughRights").get()).append("\n");
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyCantChangeNotYourObjects").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveKeyNotEnoughRights").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveKeyCantChangeNotYourObjects").get()).append("\n");
         } catch (ManualDatabaseEditException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyErrorDatabaseChanged").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveKeyErrorDatabaseChanged").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "RemoveKeyErrorDatabase").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "RemoveKeyErrorDatabase").get()).append("\n");
         }
         return builder.toString();
     }

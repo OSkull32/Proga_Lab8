@@ -383,6 +383,7 @@ public class MainWindow {
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
         if (selectedFile == null) return;
         if (client.processScriptToServer(selectedFile)) Platform.exit();
+        OutputerUI.tryScript();
         refreshButtonOnAction();
     }
 

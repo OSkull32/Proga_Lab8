@@ -58,7 +58,7 @@ public class Clear implements Command {
             if (size == 0) builder.append(ResourceFactory.getStringBinding(lang, "ClearNoYoursElements").get()).append("\n");
             else builder.append(ResourceFactory.getStringBinding(lang, "ClearDone").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "ClearError").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "ClearError").get()).append("\n");
         }
         return builder.toString();
     }

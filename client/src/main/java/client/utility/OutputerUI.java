@@ -73,8 +73,12 @@ public class OutputerUI {
     }
 
     public static void tryErrorScript(String toOut, String[] args) {
-        if (toOut.startsWith("error: "))
+        if (toOut.startsWith("error: ") || toOut.startsWith("ошибка: ") || toOut.startsWith("greška: ") || toOut.startsWith("памылка: "))
             msg(ERROR_TITLE, toOut.substring(7), args, AlertType.ERROR);
+    }
+
+    public static void tryScript() {
+        msg(INFO_TITLE, "ScriptEnd", new String[]{""}, AlertType.INFORMATION);
     }
 
     /**

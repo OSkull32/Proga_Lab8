@@ -84,16 +84,16 @@ public class Update implements Command {
                 builder.append(ResourceFactory.getStringBinding(lang, "UpdateNoSuchElement").get()).append("\n");
             }
         } catch (IndexOutOfBoundsException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "UpdateWrongArgs").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "UpdateWrongArgs").get()).append("\n");
         } catch (NumberFormatException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "UpdateWrongArgFormat").get()).append(ex.getMessage()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "UpdateWrongArgFormat").get()).append(ex.getMessage()).append("\n");
         } catch (PermissionDeniedException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "UpdateNotEnoughRights").get()).append("\n");
-            builder.append(ResourceFactory.getStringBinding(lang, "UpdateCantChangeNotYourObjects").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "UpdateNotEnoughRights").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "UpdateCantChangeNotYourObjects").get()).append("\n");
         } catch (DatabaseHandlingException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "UpdateErrorDatabase").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "UpdateErrorDatabase").get()).append("\n");
         } catch (ManualDatabaseEditException ex) {
-            builder.append(ResourceFactory.getStringBinding(lang, "UpdateDatabaseChangedManually").get()).append("\n");
+            builder.append(ResourceFactory.getStringBinding(lang, "Error").get()).append(ResourceFactory.getStringBinding(lang, "UpdateDatabaseChangedManually").get()).append("\n");
         }
         return builder.toString();
     }
