@@ -18,6 +18,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Класс запускающий клиент
@@ -32,6 +34,8 @@ public class Client implements Runnable{
     private boolean isConnected;
     private String currentLanguage;
     private final List<String> historyList;
+    private Hashtable<Integer, Flat> collection;
+    private final Lock lock = new ReentrantLock();
 
     public Client(String host, int port) {
         this.host = host;
@@ -52,7 +56,7 @@ public class Client implements Runnable{
 
     public void stop() {
         try {
-            processRequestToServer(MainWindow.EXIT_COMMAND_NAME, "", null);
+            processRequestToServer(MainWindow.EXIT_COMMAND_NAME, "", null, false);
             socketChannel.close();
             UserConsole.printCommandTextNext("EndWorkOfClient");
         } catch (IOException | NullPointerException exception) {
@@ -63,7 +67,7 @@ public class Client implements Runnable{
 
     private void connectToServer() throws ConnectionErrorException, InvalidValueException {
         try {
-            UserConsole.printCommandTextNext("ConnectionToServer");
+            //UserConsole.printCommandTextNext("ConnectionToServer");
             socketChannel = SocketChannel.open(new InetSocketAddress(host, port));
             serverWriter = new ObjectOutputStream(socketChannel.socket().getOutputStream());
             serverReader = new ObjectInputStream(socketChannel.socket().getInputStream());
@@ -75,7 +79,7 @@ public class Client implements Runnable{
             throw new InvalidValueException();
         } catch (IOException exception) {
             //exception.printStackTrace();
-            UserConsole.printCommandError("ConnectionToServerException");
+            //UserConsole.printCommandError("ConnectionToServerException");
             isConnected = false;
             throw new ConnectionErrorException();
         }
@@ -90,32 +94,46 @@ public class Client implements Runnable{
     }
 
     public Hashtable<Integer, Flat> processRequestToServer(String commandName, String commandStringArgument,
-                                                           Serializable commandObjectArgument) {
+                                                           Serializable commandObjectArgument, boolean silentMode) {
         Request requestToServer = null;
         Response serverResponse = null;
         try {
             requestToServer = new Request(commandName, commandStringArgument, commandObjectArgument, user, currentLanguage);
+            requestToServer.setCollectionHashCode(collection != null ? collection.hashCode() : 1);
+            lock.lock();
             serverWriter.writeObject(requestToServer);
             serverResponse = (Response) serverReader.readObject();
+            lock.unlock();
             if (!serverResponse.getResponseBody().isEmpty()) {
-                OutputerUI.tryError(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
+                if (!silentMode)
+                    OutputerUI.tryError(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
                 addToHistory(commandName);
             }
         } catch (InvalidClassException | NotSerializableException exception) {
-            OutputerUI.error("DataSendingException");
+            if (!silentMode)
+                OutputerUI.error("DataSendingException");
         } catch (ClassNotFoundException exception) {
-            OutputerUI.error("DataReadingException");
+            if (!silentMode)
+                OutputerUI.error("DataReadingException");
         } catch (IOException exception) {
             if (requestToServer.getCommandName().equals(MainWindow.EXIT_COMMAND_NAME)) return null;
-            OutputerUI.error("EndConnectionToServerException");
+            if (!silentMode)
+                OutputerUI.error("EndConnectionToServerException");
             try {
                 connectToServer();
-                OutputerUI.info("ConnectionToServerComplete");
+                if (!silentMode)
+                    OutputerUI.info("ConnectionToServerComplete");
             } catch (ConnectionErrorException | InvalidValueException reconnectionException) {
-                OutputerUI.info("TryCommandLater");
+                if (!silentMode)
+                    OutputerUI.info("TryCommandLater");
             }
         }
-        return serverResponse == null ? null : serverResponse.getFlatCollection();
+        if (serverResponse == null || serverResponse.getFlatCollection() == null)
+            return null;
+        else {
+            this.collection = serverResponse.getFlatCollection();
+            return serverResponse.getFlatCollection();
+        }
     }
 
     public boolean processAuthentication(String username, String password, boolean register) {
@@ -127,8 +145,10 @@ public class Client implements Runnable{
             command = register ? MainWindow.REGISTER_COMMAND_NAME : MainWindow.LOGIN_COMMAND_NAME;
             requestToServer = new Request(command, "", null, new User(username, password), currentLanguage);
             if (serverWriter == null) throw new IOException();
+            lock.lock();
             serverWriter.writeObject(requestToServer);
             serverResponse = (Response) serverReader.readObject();
+            lock.unlock();
             OutputerUI.tryError(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
         } catch (InvalidClassException | NotSerializableException exception) {
             OutputerUI.error("DataSendingException");
@@ -160,8 +180,10 @@ public class Client implements Runnable{
                         scriptHandler.handle(null, user);
                 if (requestToServer == null) return false;
                 if (requestToServer.isEmpty()) continue;
+                lock.lock();
                 serverWriter.writeObject(requestToServer);
                 serverResponse = (Response) serverReader.readObject();
+                lock.unlock();
                 if (!serverResponse.getResponseBody().isEmpty())
                     OutputerUI.tryErrorScript(serverResponse.getResponseBody(), serverResponse.getResponseBodyArgs());
             } catch (InvalidClassException | NotSerializableException exception) {
@@ -193,5 +215,9 @@ public class Client implements Runnable{
 
     public List<String> getHistoryList() {
         return historyList;
+    }
+
+    public Hashtable<Integer, Flat> getCollection() {
+        return collection;
     }
 }

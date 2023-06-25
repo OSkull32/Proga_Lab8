@@ -1,6 +1,7 @@
 package common.data;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Класс, содержащий координаты элемента коллекции
@@ -72,6 +73,19 @@ public class Coordinates implements Serializable, Comparable<Coordinates> {
     @Override
     public String toString() {
         return "(x,y) = (" + x + "," + y + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinates that = (Coordinates) o;
+        return x == that.x && y.equals(that.y);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     @Override
